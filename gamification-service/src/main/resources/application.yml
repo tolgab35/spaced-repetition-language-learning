@@ -1,0 +1,24 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: gamification-service
+  data:
+    mongodb:
+      uri: mongodb://${MONGO_HOST:localhost}:27017/srll_gamification
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: 6379
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP:localhost:9092}
+    consumer:
+      group-id: gamification-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "com.srll.*"
+
+jwt:
+  secret: ${JWT_SECRET:c3ByaW5nLWJvb3Qtc3BhY2VkLXJlcGV0aXRpb24tc2VjcmV0LWtleS0yMDI0}
