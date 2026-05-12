@@ -1,0 +1,49 @@
+# Maven
+target/
+**/target/
+
+# IDEs
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+.factorypath
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Build and test outputs
+surefire-reports/
+failsafe-reports/
+test-output/
+*.pid
+*.tmp
+
+# Environment and secrets
+.env
+.env.*
+*.local
+
+# Spring Boot
+application-local.yml
+application-local.yaml
+
+# Java
+*.class
+hs_err_pid*
+
+# Gradle caches for future Android/Kotlin work
+.gradle/
+build/
+.kotlin/
+
+# Misc
+*.swp
+*.swo
