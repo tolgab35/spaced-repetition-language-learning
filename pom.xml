@@ -23,6 +23,7 @@
         <module>auth-service</module>
         <module>card-service</module>
         <module>gamification-service</module>
+        <module>javafx-client</module>
     </modules>
 
     <properties>
