@@ -19,6 +19,8 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring.json.trusted.packages: "com.srll.*"
+        spring.json.use.type.headers: false
+        spring.json.value.default.type: com.srll.gamification.event.ReviewCompletedEvent
 
 jwt:
   secret: ${JWT_SECRET:c3ByaW5nLWJvb3Qtc3BhY2VkLXJlcGV0aXRpb24tc2VjcmV0LWtleS0yMDI0}

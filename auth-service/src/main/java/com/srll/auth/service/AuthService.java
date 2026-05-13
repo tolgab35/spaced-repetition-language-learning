@@ -8,7 +8,9 @@ import com.srll.auth.repository.UserRepository;
 import com.srll.auth.security.JwtService;
 import com.srll.common.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -50,8 +52,12 @@ public class AuthService {
     }
 
     public AuthResponse login(LoginRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+        } catch (BadCredentialsException ex) {
+            throw new BusinessException("Invalid username or password", HttpStatus.UNAUTHORIZED);
+        }
 
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new BusinessException("User not found"));

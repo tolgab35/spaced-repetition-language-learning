@@ -4,6 +4,10 @@ server:
 spring:
   application:
     name: api-gateway
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.security.reactive.ReactiveSecurityAutoConfiguration
+      - org.springframework.boot.autoconfigure.security.reactive.ReactiveUserDetailsServiceAutoConfiguration
   cloud:
     gateway:
       routes:
@@ -21,6 +25,14 @@ spring:
             - Path=/api/decks/**, /api/cards/**, /api/reviews/**
           filters:
             - AuthenticationFilter
+        - id: gamification-leaderboard
+          uri: http://gamification-service:8083
+          predicates:
+            - Path=/api/gamification/leaderboard
+          filters:
+            - name: AuthenticationFilter
+              args:
+                secured: false
         - id: gamification-service
           uri: http://gamification-service:8083
           predicates:
