@@ -9,11 +9,13 @@ import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.geometry.Point3D;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
 import java.util.Collections;
@@ -103,7 +105,49 @@ public class ReviewController {
     }
 
     private void showSessionSummary() {
-        // Task 7: oturum özeti
+        sessionProgress.setProgress(1.0);
+        progressLabel.setText("Complete! ✓");
+
+        int accuracy      = reviewedCount == 0 ? 0
+                : (int) Math.round((double) correctCount / reviewedCount * 100);
+        int estimatedXp   = correctCount * 10;
+
+        Label titleLabel = new Label("Session Complete! 🎉");
+        titleLabel.setStyle("-fx-font-size: 24; -fx-font-weight: bold;");
+
+        Label reviewedLabel = new Label("Reviewed: " + reviewedCount + " cards");
+        reviewedLabel.setStyle("-fx-font-size: 16;");
+
+        Label correctLabel = new Label("Correct: " + correctCount + "  (" + accuracy + "%)");
+        correctLabel.setStyle("-fx-font-size: 16;");
+
+        Label xpLabel = new Label("XP earned: ~" + estimatedXp + " pts");
+        xpLabel.setStyle("-fx-font-size: 16; -fx-text-fill: #3498db; -fx-font-weight: bold;");
+
+        Button progressBtn = new Button("View Progress");
+        progressBtn.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; " +
+                             "-fx-font-size: 14; -fx-padding: 8 24;");
+        progressBtn.setOnAction(e -> MainApp.navigate("progress.fxml"));
+
+        Button decksBtn = new Button("Back to Decks");
+        decksBtn.setStyle("-fx-background-color: #2ecc71; -fx-text-fill: white; " +
+                          "-fx-font-size: 14; -fx-padding: 8 24;");
+        decksBtn.setOnAction(e -> MainApp.navigate("deck-list.fxml"));
+
+        HBox btnRow = new HBox(16, progressBtn, decksBtn);
+        btnRow.setAlignment(Pos.CENTER);
+
+        VBox summary = new VBox(16, titleLabel, reviewedLabel, correctLabel, xpLabel, btnRow);
+        summary.setAlignment(Pos.CENTER);
+        summary.setStyle("-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 40; " +
+                         "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 12, 0, 0, 4);");
+
+        cardContainer.getChildren().setAll(summary);
+
+        showAnswerBtn.setVisible(false);
+        showAnswerBtn.setManaged(false);
+        ratingBox.setVisible(false);
+        ratingBox.setManaged(false);
     }
 
     private void showEmptyState() {
