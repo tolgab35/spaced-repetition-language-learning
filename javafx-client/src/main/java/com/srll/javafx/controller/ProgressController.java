@@ -11,6 +11,7 @@ import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TableColumn;
@@ -128,7 +129,43 @@ public class ProgressController {
     }
 
     private void populateBadges(ProgressResponse p) {
-        // implemented in Task 5
+        badgeTitle.setText("Badges (" + p.earnedBadges().size() + ")");
+        badgePane.getChildren().clear();
+
+        String[][] allBadges = {
+            {"FIRST_REVIEW", "⭐",  "First Review"},
+            {"STREAK_3",     "🔥",  "3-Day Streak"},
+            {"STREAK_7",     "🔥🔥", "7-Day Streak"},
+            {"STREAK_30",    "💎",  "30-Day Streak"},
+            {"REVIEWS_100",  "💯",  "Century"},
+            {"REVIEWS_500",  "🏆",  "Five Hundred"},
+            {"LEVEL_5",      "🥈",  "Level 5"},
+            {"LEVEL_10",     "🥇",  "Level 10"},
+        };
+
+        for (String[] badge : allBadges) {
+            boolean earned = p.earnedBadges().contains(badge[0]);
+            badgePane.getChildren().add(buildBadgeBox(badge[1], badge[2], earned));
+        }
+    }
+
+    private VBox buildBadgeBox(String icon, String name, boolean earned) {
+        Label iconLabel = new Label(icon);
+        iconLabel.setStyle("-fx-font-size: 28;");
+
+        Label nameLabel = new Label(name);
+        nameLabel.setStyle("-fx-font-size: 11; -fx-text-fill: " + (earned ? "#2c3e50" : "#bdc3c7") + ";");
+
+        VBox box = new VBox(4, iconLabel, nameLabel);
+        box.setAlignment(Pos.CENTER);
+        box.setStyle("-fx-background-color: " + (earned ? "white" : "#f5f6fa") + ";" +
+                     "-fx-background-radius: 8; -fx-padding: 10;" +
+                     "-fx-border-color: " + (earned ? "#3498db" : "#e0e0e0") + ";" +
+                     "-fx-border-radius: 8; -fx-min-width: 72;");
+        if (!earned) {
+            box.setOpacity(0.4);
+        }
+        return box;
     }
 
     private void populateLeaderboard(List<LeaderboardEntry> entries) {
