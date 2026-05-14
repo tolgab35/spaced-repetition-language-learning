@@ -102,6 +102,10 @@ public class ReviewController {
         sessionProgress.setProgress(total == 0 ? 0 : (double) currentIndex / total);
     }
 
+    private void showSessionSummary() {
+        // Task 7: oturum özeti
+    }
+
     private void showEmptyState() {
         frontLabel.setText("No cards due for review today!");
         sessionProgress.setProgress(1.0);
@@ -152,6 +156,39 @@ public class ReviewController {
     @FXML private void handleEasy()  { submitRating(5); }
 
     private void submitRating(int rating) {
-        // Task 5: POST /api/cards/{id}/review
+        CardResponse current = dueCards.get(currentIndex);
+        ratingBox.setDisable(true);
+
+        Task<CardResponse> task = new Task<>() {
+            @Override
+            protected CardResponse call() throws Exception {
+                return cardService.reviewCard(current.id(), rating);
+            }
+        };
+
+        task.setOnSucceeded(e -> Platform.runLater(() -> {
+            reviewedCount++;
+            if (rating >= 4) correctCount++;
+
+            currentIndex++;
+            ratingBox.setDisable(false);
+
+            if (currentIndex >= dueCards.size()) {
+                showSessionSummary();
+            } else {
+                showCard(currentIndex);
+            }
+        }));
+
+        task.setOnFailed(e -> Platform.runLater(() -> {
+            ratingBox.setDisable(false);
+            Throwable ex = task.getException();
+            String msg = ex instanceof ApiException api
+                    ? api.getMessage()
+                    : "Connection error. Is the backend running?";
+            frontLabel.setText("Error: " + msg);
+        }));
+
+        new Thread(task).start();
     }
 }
