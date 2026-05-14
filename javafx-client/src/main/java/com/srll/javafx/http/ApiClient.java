@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.srll.javafx.MainApp;
 import com.srll.javafx.session.SessionManager;
 import javafx.application.Platform;
+import javafx.scene.control.Alert;
 
 import java.io.IOException;
 import java.net.URI;
@@ -108,7 +109,15 @@ public class ApiClient {
         } catch (ApiException e) {
             throw e;
         } catch (IOException e) {
-            throw new ApiException("Cannot connect to server at localhost:8080. Start docker-compose first.", e);
+            String msg = "Cannot connect to server at localhost:8080.\nStart docker-compose first.";
+            Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Connection Error");
+                alert.setHeaderText("Backend is unreachable");
+                alert.setContentText(msg);
+                alert.showAndWait();
+            });
+            throw new ApiException(msg, e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new ApiException("Request interrupted", e);
