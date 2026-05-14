@@ -8,10 +8,14 @@ import com.srll.javafx.session.SessionManager;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -113,7 +117,51 @@ public class DeckListController {
 
     @FXML
     private void handleNewDeck() {
-        // Dialog bir sonraki görevde eklenecek
+        TextField nameField = new TextField();
+        nameField.setPromptText("Name (required)");
+
+        TextField descField = new TextField();
+        descField.setPromptText("Description (optional)");
+
+        TextField langField = new TextField();
+        langField.setPromptText("Language (e.g. English, Spanish)");
+
+        VBox content = new VBox(8,
+                new Label("Name:"), nameField,
+                new Label("Description:"), descField,
+                new Label("Language:"), langField);
+        content.setPrefWidth(320);
+        content.setPadding(new Insets(12));
+
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("New Deck");
+        dialog.setHeaderText("Create a new deck");
+        dialog.getDialogPane().setContent(content);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+        okButton.setDisable(true);
+        nameField.textProperty().addListener((obs, old, val) ->
+                okButton.setDisable(val.trim().isEmpty() || langField.getText().trim().isEmpty()));
+        langField.textProperty().addListener((obs, old, val) ->
+                okButton.setDisable(val.trim().isEmpty() || nameField.getText().trim().isEmpty()));
+
+        dialog.showAndWait().ifPresent(result -> {
+            if (result != ButtonType.OK) return;
+            String name = nameField.getText().trim();
+            String desc = descField.getText().trim();
+            String lang = langField.getText().trim();
+
+            Task<DeckResponse> createTask = new Task<>() {
+                @Override
+                protected DeckResponse call() throws Exception {
+                    return deckService.createDeck(name, desc, lang);
+                }
+            };
+            createTask.setOnSucceeded(e -> Platform.runLater(this::loadDecks));
+            createTask.setOnFailed(e -> Platform.runLater(() -> showError(createTask.getException())));
+            new Thread(createTask).start();
+        });
     }
 
     @FXML
