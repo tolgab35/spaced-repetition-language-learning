@@ -46,4 +46,12 @@ public class CardApiService {
     public void deleteCard(Long cardId) {
         ApiClient.delete("/api/cards/" + cardId);
     }
+
+    public List<CardResponse> getDueCards() {
+        ApiResponse<List<CardResponse>> response = ApiClient.get(
+                "/api/cards/due",
+                new TypeReference<>() {}
+        );
+        return response.data();
+    }
 }

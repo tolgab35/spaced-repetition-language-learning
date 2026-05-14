@@ -1,8 +1,11 @@
 package com.srll.javafx.controller;
 
 import com.srll.javafx.MainApp;
+import com.srll.javafx.http.ApiException;
 import com.srll.javafx.http.dto.CardResponse;
 import com.srll.javafx.service.CardApiService;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -10,6 +13,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 
+import java.util.Collections;
 import java.util.List;
 
 public class ReviewController {
@@ -33,7 +37,74 @@ public class ReviewController {
 
     @FXML
     public void initialize() {
-        // Task 2: load due cards
+        loadDueCards();
+    }
+
+    private void loadDueCards() {
+        frontLabel.setText("Loading...");
+        showAnswerBtn.setDisable(true);
+
+        Task<List<CardResponse>> task = new Task<>() {
+            @Override
+            protected List<CardResponse> call() throws Exception {
+                return cardService.getDueCards();
+            }
+        };
+
+        task.setOnSucceeded(e -> Platform.runLater(() -> {
+            dueCards = task.getValue();
+            Collections.shuffle(dueCards);
+            currentIndex = 0;
+            showAnswerBtn.setDisable(false);
+            if (dueCards.isEmpty()) {
+                showEmptyState();
+            } else {
+                showCard(0);
+            }
+        }));
+
+        task.setOnFailed(e -> Platform.runLater(() -> {
+            Throwable ex = task.getException();
+            String msg = ex instanceof ApiException api
+                    ? api.getMessage()
+                    : "Connection error. Is the backend running?";
+            frontLabel.setText("Error: " + msg);
+            showAnswerBtn.setDisable(true);
+        }));
+
+        new Thread(task).start();
+    }
+
+    private void showCard(int index) {
+        CardResponse card = dueCards.get(index);
+        frontLabel.setText(card.front());
+        backLabel.setText(card.back());
+
+        frontFace.setVisible(true);
+        frontFace.setManaged(true);
+        backFace.setVisible(false);
+        backFace.setManaged(false);
+
+        showAnswerBtn.setVisible(true);
+        showAnswerBtn.setManaged(true);
+        ratingBox.setVisible(false);
+        ratingBox.setManaged(false);
+
+        updateProgress();
+    }
+
+    private void updateProgress() {
+        int total = dueCards.size();
+        progressLabel.setText("Card " + (currentIndex + 1) + " / " + total);
+        sessionProgress.setProgress(total == 0 ? 0 : (double) currentIndex / total);
+    }
+
+    private void showEmptyState() {
+        frontLabel.setText("No cards due for review today!");
+        sessionProgress.setProgress(1.0);
+        progressLabel.setText("All done!");
+        showAnswerBtn.setVisible(false);
+        showAnswerBtn.setManaged(false);
     }
 
     @FXML
