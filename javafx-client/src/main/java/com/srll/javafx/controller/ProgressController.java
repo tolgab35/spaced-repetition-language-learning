@@ -106,7 +106,25 @@ public class ProgressController {
     }
 
     private void populateStats(ProgressResponse p) {
-        // implemented in Task 4
+        int accuracy = p.totalReviews() == 0 ? 0
+                : (int) Math.round((double) p.totalCorrect() / p.totalReviews() * 100);
+        String lastReview = p.lastReviewDate() != null ? p.lastReviewDate().toString() : "—";
+
+        addStatRow(0, "Total Reviews",  String.valueOf(p.totalReviews()));
+        addStatRow(1, "Correct",        p.totalCorrect() + "  (" + accuracy + "%)");
+        addStatRow(2, "Current Streak", p.streakDays() + " days 🔥");
+        addStatRow(3, "Last Review",    lastReview);
+    }
+
+    private void addStatRow(int row, String key, String value) {
+        Label keyLabel = new Label(key);
+        keyLabel.setStyle("-fx-text-fill: #7f8c8d; -fx-font-size: 13; -fx-min-width: 140;");
+
+        Label valueLabel = new Label(value);
+        valueLabel.setStyle("-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+
+        statsGrid.add(keyLabel,   0, row);
+        statsGrid.add(valueLabel, 1, row);
     }
 
     private void populateBadges(ProgressResponse p) {
