@@ -10,6 +10,7 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
@@ -102,17 +103,25 @@ public class DeckListController {
     }
 
     private void handleDelete(DeckResponse deck) {
-        // Onay dialogu bir sonraki görevde eklenecek
-        Task<Void> deleteTask = new Task<>() {
-            @Override
-            protected Void call() throws Exception {
-                deckService.deleteDeck(deck.id());
-                return null;
-            }
-        };
-        deleteTask.setOnSucceeded(e -> Platform.runLater(this::loadDecks));
-        deleteTask.setOnFailed(e -> Platform.runLater(() -> showError(deleteTask.getException())));
-        new Thread(deleteTask).start();
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Delete Deck");
+        confirm.setHeaderText("Delete \"" + deck.name() + "\"?");
+        confirm.setContentText("This will permanently delete the deck and all its cards. This action cannot be undone.");
+
+        confirm.showAndWait().ifPresent(result -> {
+            if (result != ButtonType.OK) return;
+
+            Task<Void> deleteTask = new Task<>() {
+                @Override
+                protected Void call() throws Exception {
+                    deckService.deleteDeck(deck.id());
+                    return null;
+                }
+            };
+            deleteTask.setOnSucceeded(e -> Platform.runLater(this::loadDecks));
+            deleteTask.setOnFailed(e -> Platform.runLater(() -> showError(deleteTask.getException())));
+            new Thread(deleteTask).start();
+        });
     }
 
     @FXML
