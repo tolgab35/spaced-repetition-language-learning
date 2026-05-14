@@ -4,14 +4,17 @@ import com.srll.javafx.MainApp;
 import com.srll.javafx.http.ApiException;
 import com.srll.javafx.http.dto.CardResponse;
 import com.srll.javafx.service.CardApiService;
+import javafx.animation.RotateTransition;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.geometry.Point3D;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.util.Duration;
 
 import java.util.Collections;
 import java.util.List;
@@ -114,7 +117,33 @@ public class ReviewController {
 
     @FXML
     private void handleShowAnswer() {
-        // Task 3: flip animation
+        showAnswerBtn.setDisable(true);
+
+        RotateTransition rotateOut = new RotateTransition(Duration.millis(150), cardContainer);
+        rotateOut.setFromAngle(0);
+        rotateOut.setToAngle(90);
+        rotateOut.setAxis(new Point3D(0, 1, 0));
+
+        rotateOut.setOnFinished(e -> {
+            frontFace.setVisible(false);
+            frontFace.setManaged(false);
+            backFace.setVisible(true);
+            backFace.setManaged(true);
+
+            RotateTransition rotateIn = new RotateTransition(Duration.millis(150), cardContainer);
+            rotateIn.setFromAngle(-90);
+            rotateIn.setToAngle(0);
+            rotateIn.setAxis(new Point3D(0, 1, 0));
+            rotateIn.setOnFinished(ev -> {
+                showAnswerBtn.setVisible(false);
+                showAnswerBtn.setManaged(false);
+                ratingBox.setVisible(true);
+                ratingBox.setManaged(true);
+            });
+            rotateIn.play();
+        });
+
+        rotateOut.play();
     }
 
     @FXML private void handleAgain() { submitRating(0); }
