@@ -5,6 +5,7 @@ import com.srll.javafx.http.ApiException;
 import com.srll.javafx.http.dto.LeaderboardEntry;
 import com.srll.javafx.http.dto.ProgressResponse;
 import com.srll.javafx.service.GamificationApiService;
+import com.srll.javafx.session.SessionManager;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -12,9 +13,12 @@ import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
@@ -169,7 +173,33 @@ public class ProgressController {
     }
 
     private void populateLeaderboard(List<LeaderboardEntry> entries) {
-        // implemented in Task 6
+        String currentUserId = String.valueOf(SessionManager.getInstance().getUserId());
+
+        rankColumn.setCellFactory(col -> new TableCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty ? null : String.valueOf(getIndex() + 1));
+            }
+        });
+        userColumn.setCellValueFactory(data ->
+                new SimpleStringProperty("User " + data.getValue().userId()));
+        xpColumn.setCellValueFactory(data ->
+                new SimpleStringProperty(String.valueOf((int) data.getValue().xp())));
+
+        leaderboardTable.setRowFactory(tv -> new TableRow<>() {
+            @Override
+            protected void updateItem(LeaderboardEntry entry, boolean empty) {
+                super.updateItem(entry, empty);
+                if (!empty && entry != null && entry.userId().equals(currentUserId)) {
+                    setStyle("-fx-background-color: #d6eaf8;");
+                } else {
+                    setStyle("");
+                }
+            }
+        });
+
+        leaderboardTable.getItems().setAll(entries);
     }
 
     @FXML
