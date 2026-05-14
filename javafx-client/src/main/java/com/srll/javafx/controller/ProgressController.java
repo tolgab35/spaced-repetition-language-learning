@@ -5,16 +5,20 @@ import com.srll.javafx.http.ApiException;
 import com.srll.javafx.http.dto.LeaderboardEntry;
 import com.srll.javafx.http.dto.ProgressResponse;
 import com.srll.javafx.service.GamificationApiService;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 
 import java.util.List;
 
@@ -89,8 +93,16 @@ public class ProgressController {
 
     private void populateLevelPanel(ProgressResponse p) {
         levelLabel.setText("Level " + p.level());
-        xpLabel.setText((p.xp() % 100) + " / 100 XP to next level");
-        xpBar.setProgress((p.xp() % 100) / 100.0);
+        int xpInLevel = p.xp() % 100;
+        xpLabel.setText(xpInLevel + " / 100 XP to next level");
+
+        double target = xpInLevel / 100.0;
+        xpBar.setProgress(0);
+        Timeline xpAnimation = new Timeline(
+                new KeyFrame(Duration.ZERO,        new KeyValue(xpBar.progressProperty(), 0)),
+                new KeyFrame(Duration.millis(800),  new KeyValue(xpBar.progressProperty(), target))
+        );
+        xpAnimation.play();
     }
 
     private void populateStats(ProgressResponse p) {
