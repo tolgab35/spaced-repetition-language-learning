@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.srll.javafx.controller.ProgressController"
+      alignment="CENTER" spacing="16" style="-fx-padding: 40;">
+    <Label text="Progress Screen — coming soon" />
+</VBox>
