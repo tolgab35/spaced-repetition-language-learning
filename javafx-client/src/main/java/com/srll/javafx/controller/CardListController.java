@@ -8,13 +8,18 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 
 import java.time.format.DateTimeFormatter;
@@ -103,7 +108,50 @@ public class CardListController {
 
     @FXML
     private void handleAddCard() {
-        // implemented in Phase 4 Task 4
+        TextArea frontArea = new TextArea();
+        frontArea.setPromptText("Front (question / word)");
+        frontArea.setPrefRowCount(3);
+        frontArea.setWrapText(true);
+
+        TextArea backArea = new TextArea();
+        backArea.setPromptText("Back (answer / translation)");
+        backArea.setPrefRowCount(3);
+        backArea.setWrapText(true);
+
+        VBox content = new VBox(8,
+                new Label("Front:"), frontArea,
+                new Label("Back:"), backArea);
+        content.setPrefWidth(360);
+        content.setPadding(new Insets(12));
+
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Add Card");
+        dialog.setHeaderText("Create a new card");
+        dialog.getDialogPane().setContent(content);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+        okButton.setDisable(true);
+        frontArea.textProperty().addListener((obs, old, val) ->
+                okButton.setDisable(val.trim().isEmpty() || backArea.getText().trim().isEmpty()));
+        backArea.textProperty().addListener((obs, old, val) ->
+                okButton.setDisable(val.trim().isEmpty() || frontArea.getText().trim().isEmpty()));
+
+        dialog.showAndWait().ifPresent(result -> {
+            if (result != ButtonType.OK) return;
+            String front = frontArea.getText().trim();
+            String back  = backArea.getText().trim();
+
+            Task<CardResponse> createTask = new Task<>() {
+                @Override
+                protected CardResponse call() throws Exception {
+                    return cardService.createCard(DeckListController.selectedDeckId, front, back);
+                }
+            };
+            createTask.setOnSucceeded(e -> Platform.runLater(this::loadCards));
+            createTask.setOnFailed(e -> Platform.runLater(() -> showError(createTask.getException())));
+            new Thread(createTask).start();
+        });
     }
 
     private void handleEditCard(CardResponse card) {
