@@ -155,7 +155,49 @@ public class CardListController {
     }
 
     private void handleEditCard(CardResponse card) {
-        // implemented in Phase 4 Task 5
+        TextArea frontArea = new TextArea(card.front());
+        frontArea.setPromptText("Front (question / word)");
+        frontArea.setPrefRowCount(3);
+        frontArea.setWrapText(true);
+
+        TextArea backArea = new TextArea(card.back());
+        backArea.setPromptText("Back (answer / translation)");
+        backArea.setPrefRowCount(3);
+        backArea.setWrapText(true);
+
+        VBox content = new VBox(8,
+                new Label("Front:"), frontArea,
+                new Label("Back:"), backArea);
+        content.setPrefWidth(360);
+        content.setPadding(new Insets(12));
+
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Edit Card");
+        dialog.setHeaderText("Edit card");
+        dialog.getDialogPane().setContent(content);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+        frontArea.textProperty().addListener((obs, old, val) ->
+                okButton.setDisable(val.trim().isEmpty() || backArea.getText().trim().isEmpty()));
+        backArea.textProperty().addListener((obs, old, val) ->
+                okButton.setDisable(val.trim().isEmpty() || frontArea.getText().trim().isEmpty()));
+
+        dialog.showAndWait().ifPresent(result -> {
+            if (result != ButtonType.OK) return;
+            String front = frontArea.getText().trim();
+            String back  = backArea.getText().trim();
+
+            Task<CardResponse> updateTask = new Task<>() {
+                @Override
+                protected CardResponse call() throws Exception {
+                    return cardService.updateCard(card.id(), front, back);
+                }
+            };
+            updateTask.setOnSucceeded(e -> Platform.runLater(this::loadCards));
+            updateTask.setOnFailed(e -> Platform.runLater(() -> showError(updateTask.getException())));
+            new Thread(updateTask).start();
+        });
     }
 
     private void handleDeleteCard(CardResponse card) {
