@@ -1,3 +1,141 @@
 package com.srll.javafx.controller;
 
-public class DeckListController {}
+import com.srll.javafx.MainApp;
+import com.srll.javafx.http.ApiException;
+import com.srll.javafx.http.dto.DeckResponse;
+import com.srll.javafx.service.DeckApiService;
+import com.srll.javafx.session.SessionManager;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
+import javafx.fxml.FXML;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
+
+import java.util.List;
+
+public class DeckListController {
+
+    public static Long selectedDeckId;
+    public static String selectedDeckName;
+
+    @FXML private VBox deckListContainer;
+
+    private final DeckApiService deckService = new DeckApiService();
+
+    @FXML
+    public void initialize() {
+        loadDecks();
+    }
+
+    private void loadDecks() {
+        deckListContainer.getChildren().setAll(new ProgressIndicator());
+
+        Task<List<DeckResponse>> task = new Task<>() {
+            @Override
+            protected List<DeckResponse> call() throws Exception {
+                return deckService.getDecks();
+            }
+        };
+
+        task.setOnSucceeded(e -> Platform.runLater(() -> populateDeckList(task.getValue())));
+        task.setOnFailed(e -> Platform.runLater(() -> showError(task.getException())));
+        new Thread(task).start();
+    }
+
+    private void populateDeckList(List<DeckResponse> decks) {
+        deckListContainer.getChildren().clear();
+        if (decks.isEmpty()) {
+            Label empty = new Label("No decks yet. Click '+ New Deck' to create one.");
+            empty.setStyle("-fx-text-fill: #7f8c8d; -fx-font-size: 14;");
+            deckListContainer.getChildren().add(empty);
+            return;
+        }
+        for (DeckResponse deck : decks) {
+            deckListContainer.getChildren().add(createDeckCard(deck));
+        }
+    }
+
+    private HBox createDeckCard(DeckResponse deck) {
+        Label nameLabel = new Label(deck.name());
+        nameLabel.setStyle("-fx-font-size: 16; -fx-font-weight: bold;");
+
+        Label langLabel = new Label(deck.language());
+        langLabel.setStyle("-fx-text-fill: #7f8c8d; -fx-font-size: 12;");
+
+        Label countLabel = new Label(deck.cardCount() + " cards");
+        countLabel.setStyle("-fx-text-fill: #7f8c8d; -fx-font-size: 12;");
+
+        VBox info = new VBox(4, nameLabel, langLabel, countLabel);
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        Button reviewBtn = new Button("Review");
+        reviewBtn.setOnAction(e -> MainApp.navigate("review.fxml"));
+
+        Button cardsBtn = new Button("Cards");
+        cardsBtn.setOnAction(e -> {
+            selectedDeckId = deck.id();
+            selectedDeckName = deck.name();
+            MainApp.navigate("card-list.fxml");
+        });
+
+        Button deleteBtn = new Button("Delete");
+        deleteBtn.setStyle("-fx-text-fill: #e74c3c;");
+        deleteBtn.setOnAction(e -> handleDelete(deck));
+
+        HBox card = new HBox(12, info, spacer, reviewBtn, cardsBtn, deleteBtn);
+        card.setAlignment(Pos.CENTER_LEFT);
+        card.setStyle("-fx-background-color: white; -fx-background-radius: 8; " +
+                "-fx-border-color: #e0e0e0; -fx-border-radius: 8; -fx-padding: 12;");
+        return card;
+    }
+
+    private void handleDelete(DeckResponse deck) {
+        // Onay dialogu bir sonraki görevde eklenecek
+        Task<Void> deleteTask = new Task<>() {
+            @Override
+            protected Void call() throws Exception {
+                deckService.deleteDeck(deck.id());
+                return null;
+            }
+        };
+        deleteTask.setOnSucceeded(e -> Platform.runLater(this::loadDecks));
+        deleteTask.setOnFailed(e -> Platform.runLater(() -> showError(deleteTask.getException())));
+        new Thread(deleteTask).start();
+    }
+
+    @FXML
+    private void handleNewDeck() {
+        // Dialog bir sonraki görevde eklenecek
+    }
+
+    @FXML
+    private void handleProgress() {
+        MainApp.navigate("progress.fxml");
+    }
+
+    @FXML
+    private void handleLogout() {
+        SessionManager.getInstance().clearSession();
+        MainApp.navigate("login.fxml");
+    }
+
+    private void showError(Throwable ex) {
+        deckListContainer.getChildren().clear();
+        String message = ex instanceof ApiException api
+                ? api.getMessage()
+                : "Connection error. Is the backend running?";
+        Label errorLabel = new Label("Error: " + message);
+        errorLabel.setStyle("-fx-text-fill: #e74c3c;");
+        Button retryBtn = new Button("Retry");
+        retryBtn.setOnAction(e -> loadDecks());
+        deckListContainer.getChildren().addAll(errorLabel, retryBtn);
+    }
+}
