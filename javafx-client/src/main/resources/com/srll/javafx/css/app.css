@@ -1,0 +1,69 @@
+.root {
+    -fx-font-family: "Segoe UI", "Arial", sans-serif;
+    -fx-base: #f5f6fa;
+    -fx-accent: #3498db;
+}
+
+/* ── Card pane (review screen front/back faces) ─────────────────────── */
+.card-pane {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 12, 0, 0, 4);
+    -fx-min-width: 480;
+    -fx-min-height: 280;
+}
+
+/* ── Rating buttons ──────────────────────────────────────────────────── */
+.btn-again {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+    -fx-font-size: 13;
+    -fx-font-weight: bold;
+}
+.btn-again:hover  { -fx-background-color: #c0392b; }
+
+.btn-hard {
+    -fx-background-color: #e67e22;
+    -fx-text-fill: white;
+    -fx-font-size: 13;
+    -fx-font-weight: bold;
+}
+.btn-hard:hover   { -fx-background-color: #ca6f1e; }
+
+.btn-good {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-font-size: 13;
+    -fx-font-weight: bold;
+}
+.btn-good:hover   { -fx-background-color: #2980b9; }
+
+.btn-easy {
+    -fx-background-color: #2ecc71;
+    -fx-text-fill: white;
+    -fx-font-size: 13;
+    -fx-font-weight: bold;
+}
+.btn-easy:hover   { -fx-background-color: #27ae60; }
+
+/* ── Deck cards (deck-list screen) ──────────────────────────────────── */
+.deck-card {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 8;
+    -fx-padding: 12;
+}
+.deck-card:hover {
+    -fx-border-color: #3498db;
+    -fx-effect: dropshadow(gaussian, rgba(52, 152, 219, 0.2), 8, 0, 0, 2);
+}
+
+/* ── Utility label styles ────────────────────────────────────────────── */
+.error-label {
+    -fx-text-fill: #e74c3c;
+}
+.secondary-label {
+    -fx-text-fill: #7f8c8d;
+    -fx-font-size: 12;
+}

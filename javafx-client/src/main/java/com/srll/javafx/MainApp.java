@@ -31,7 +31,12 @@ public class MainApp extends Application {
             }
             Parent root = FXMLLoader.load(resource);
             if (primaryStage.getScene() == null) {
-                primaryStage.setScene(new Scene(root, 800, 600));
+                Scene scene = new Scene(root, 800, 600);
+                URL css = MainApp.class.getResource("/com/srll/javafx/css/app.css");
+                if (css != null) {
+                    scene.getStylesheets().add(css.toExternalForm());
+                }
+                primaryStage.setScene(scene);
             } else {
                 primaryStage.getScene().setRoot(root);
             }
