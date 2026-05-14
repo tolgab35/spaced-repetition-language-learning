@@ -9,6 +9,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
@@ -201,7 +202,25 @@ public class CardListController {
     }
 
     private void handleDeleteCard(CardResponse card) {
-        // implemented in Phase 4 Task 6
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Delete Card");
+        confirm.setHeaderText("Delete this card?");
+        confirm.setContentText("Front: " + card.front() + "\n\nThis action cannot be undone.");
+
+        confirm.showAndWait().ifPresent(result -> {
+            if (result != ButtonType.OK) return;
+
+            Task<Void> deleteTask = new Task<>() {
+                @Override
+                protected Void call() throws Exception {
+                    cardService.deleteCard(card.id());
+                    return null;
+                }
+            };
+            deleteTask.setOnSucceeded(e -> Platform.runLater(this::loadCards));
+            deleteTask.setOnFailed(e -> Platform.runLater(() -> showError(deleteTask.getException())));
+            new Thread(deleteTask).start();
+        });
     }
 
     private void showError(Throwable ex) {
