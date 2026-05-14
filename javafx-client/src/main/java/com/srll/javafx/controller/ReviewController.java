@@ -10,6 +10,7 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.geometry.Point3D;
 import javafx.geometry.Pos;
+import javafx.scene.text.TextAlignment;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
@@ -151,11 +152,36 @@ public class ReviewController {
     }
 
     private void showEmptyState() {
-        frontLabel.setText("No cards due for review today!");
         sessionProgress.setProgress(1.0);
         progressLabel.setText("All done!");
+
+        Label emojiLabel = new Label("🎉");
+        emojiLabel.setStyle("-fx-font-size: 48;");
+
+        Label titleLabel = new Label("You're all caught up!");
+        titleLabel.setStyle("-fx-font-size: 22; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+
+        Label subLabel = new Label("No cards are due for review today.\nCome back later!");
+        subLabel.setStyle("-fx-font-size: 14; -fx-text-fill: #7f8c8d;");
+        subLabel.setTextAlignment(TextAlignment.CENTER);
+        subLabel.setWrapText(true);
+
+        Button backBtn = new Button("Back to Decks");
+        backBtn.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; " +
+                         "-fx-font-size: 14; -fx-padding: 8 24;");
+        backBtn.setOnAction(e -> MainApp.navigate("deck-list.fxml"));
+
+        VBox emptyBox = new VBox(16, emojiLabel, titleLabel, subLabel, backBtn);
+        emptyBox.setAlignment(Pos.CENTER);
+        emptyBox.setStyle("-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 40; " +
+                          "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 12, 0, 0, 4);");
+
+        cardContainer.getChildren().setAll(emptyBox);
+
         showAnswerBtn.setVisible(false);
         showAnswerBtn.setManaged(false);
+        ratingBox.setVisible(false);
+        ratingBox.setManaged(false);
     }
 
     @FXML
