@@ -4,7 +4,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.srll.javafx.MainApp;
 import com.srll.javafx.session.SessionManager;
+import javafx.application.Platform;
 
 import java.io.IOException;
 import java.net.URI;
@@ -88,6 +90,11 @@ public class ApiClient {
                     HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
 
             int status = response.statusCode();
+            if (status == 401) {
+                SessionManager.getInstance().clearSession();
+                Platform.runLater(() -> MainApp.navigate("login.fxml"));
+                throw new ApiException(401, "Session expired. Please log in again.");
+            }
             if (status == 204 || responseType.getType() == Void.class) {
                 if (status < 200 || status >= 300) {
                     throw new ApiException(status, userFriendlyMessage(status, response.body()));
