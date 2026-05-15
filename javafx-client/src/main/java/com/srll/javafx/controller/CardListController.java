@@ -6,22 +6,18 @@ import com.srll.javafx.http.dto.CardResponse;
 import com.srll.javafx.service.CardApiService;
 import com.srll.javafx.ui.Dialogs;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressIndicator;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.util.Callback;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -29,62 +25,27 @@ import java.util.List;
 public class CardListController {
 
     @FXML private Label deckNameLabel;
-    @FXML private TableView<CardResponse> cardTable;
-    @FXML private TableColumn<CardResponse, String> frontColumn;
-    @FXML private TableColumn<CardResponse, String> backColumn;
-    @FXML private TableColumn<CardResponse, String> intervalColumn;
-    @FXML private TableColumn<CardResponse, String> nextReviewColumn;
-    @FXML private TableColumn<CardResponse, Void> actionsColumn;
+    @FXML private VBox  cardContainer;
 
     private final CardApiService cardService = new CardApiService();
     private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
+    private static final String[] BADGE_COLORS = {
+        "#4ECDC4", "#6BCB77", "#FF9F1C", "#FF6B6B", "#C77DFF"
+    };
+
     @FXML
     public void initialize() {
         deckNameLabel.setText(DeckListController.selectedDeckName);
-        setupColumns();
         loadCards();
     }
 
-    private void setupColumns() {
-        cardTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
-        frontColumn.setCellValueFactory(data ->
-                new SimpleStringProperty(data.getValue().front()));
-        backColumn.setCellValueFactory(data ->
-                new SimpleStringProperty(data.getValue().back()));
-        intervalColumn.setCellValueFactory(data ->
-                new SimpleStringProperty(data.getValue().intervalDays() + " days"));
-        nextReviewColumn.setCellValueFactory(data -> {
-            var dt = data.getValue().nextReview();
-            return new SimpleStringProperty(dt != null ? dt.format(DATE_FMT) : "—");
-        });
-        actionsColumn.setCellFactory(buildActionsColumn());
-    }
-
-    private Callback<TableColumn<CardResponse, Void>, TableCell<CardResponse, Void>> buildActionsColumn() {
-        return col -> new TableCell<>() {
-            private final Button editBtn   = new Button("Edit");
-            private final Button deleteBtn = new Button("Delete");
-            private final HBox   buttons   = new HBox(8, editBtn, deleteBtn);
-
-            {
-                editBtn.getStyleClass().add("btn-mini-alt");
-                deleteBtn.getStyleClass().add("btn-mini-danger");
-                editBtn.setOnAction(e -> handleEditCard(getTableView().getItems().get(getIndex())));
-                deleteBtn.setOnAction(e -> handleDeleteCard(getTableView().getItems().get(getIndex())));
-            }
-
-            @Override
-            protected void updateItem(Void item, boolean empty) {
-                super.updateItem(item, empty);
-                setGraphic(empty ? null : buttons);
-            }
-        };
-    }
-
     private void loadCards() {
-        cardTable.getItems().clear();
-        cardTable.setPlaceholder(new ProgressIndicator());
+        cardContainer.getChildren().clear();
+        Label loading = new Label("Loading...");
+        loading.getStyleClass().add("secondary-label");
+        loading.setStyle("-fx-padding: 32; -fx-font-size: 14;");
+        cardContainer.getChildren().add(loading);
 
         Task<List<CardResponse>> task = new Task<>() {
             @Override
@@ -95,13 +56,73 @@ public class CardListController {
 
         task.setOnSucceeded(e -> Platform.runLater(() -> {
             List<CardResponse> cards = task.getValue();
-            cardTable.getItems().setAll(cards);
+            cardContainer.getChildren().clear();
             if (cards.isEmpty()) {
-                cardTable.setPlaceholder(new Label("No cards yet. Click '+ Add Card' to create one."));
+                Label empty = new Label("No cards yet. Click '+ Add Card' to create one.");
+                empty.getStyleClass().add("secondary-label");
+                empty.setStyle("-fx-padding: 32; -fx-font-size: 14;");
+                cardContainer.getChildren().add(empty);
+            } else {
+                for (int i = 0; i < cards.size(); i++) {
+                    cardContainer.getChildren().add(buildCardItem(cards.get(i), i + 1));
+                }
             }
         }));
         task.setOnFailed(e -> Platform.runLater(() -> showError(task.getException())));
         new Thread(task).start();
+    }
+
+    private HBox buildCardItem(CardResponse card, int index) {
+        String badgeColor = BADGE_COLORS[(index - 1) % BADGE_COLORS.length];
+
+        Label indexBadge = new Label(String.valueOf(index));
+        indexBadge.getStyleClass().add("card-index-badge");
+        indexBadge.setStyle("-fx-background-color: " + badgeColor + ";");
+
+        Label frontLabel = new Label(card.front());
+        frontLabel.getStyleClass().add("card-item-front");
+        frontLabel.setWrapText(true);
+        frontLabel.setMaxWidth(Double.MAX_VALUE);
+
+        Label backLabel = new Label(card.back());
+        backLabel.getStyleClass().add("card-item-back");
+        backLabel.setWrapText(true);
+        backLabel.setMaxWidth(Double.MAX_VALUE);
+
+        VBox textBox = new VBox(4, frontLabel, backLabel);
+        textBox.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(textBox, Priority.ALWAYS);
+
+        Label intervalPill = new Label(card.intervalDays() + " days");
+        intervalPill.getStyleClass().add("card-meta-pill");
+
+        String nextReviewStr = card.nextReview() != null ? card.nextReview().format(DATE_FMT) : "—";
+        Label nextReviewPill = new Label(nextReviewStr);
+        nextReviewPill.getStyleClass().add("card-meta-pill");
+
+        HBox metaRow = new HBox(6, intervalPill, nextReviewPill);
+        metaRow.setAlignment(Pos.CENTER_RIGHT);
+
+        Button editBtn = new Button("Edit");
+        editBtn.getStyleClass().add("btn-mini-alt");
+        editBtn.setOnAction(e -> handleEditCard(card));
+
+        Button deleteBtn = new Button("Delete");
+        deleteBtn.getStyleClass().add("btn-mini-danger");
+        deleteBtn.setOnAction(e -> handleDeleteCard(card));
+
+        HBox actionRow = new HBox(8, editBtn, deleteBtn);
+        actionRow.setAlignment(Pos.CENTER_RIGHT);
+
+        VBox rightBox = new VBox(8, metaRow, actionRow);
+        rightBox.setAlignment(Pos.CENTER_RIGHT);
+
+        HBox item = new HBox(14, indexBadge, textBox, rightBox);
+        item.getStyleClass().add("card-list-item");
+        item.setAlignment(Pos.CENTER_LEFT);
+        item.setMaxWidth(Double.MAX_VALUE);
+
+        return item;
     }
 
     @FXML
@@ -239,6 +260,10 @@ public class CardListController {
         String message = ex instanceof ApiException api
                 ? api.getMessage()
                 : "Connection error. Is the backend running?";
-        cardTable.setPlaceholder(new Label("Error: " + message));
+        Label errorLabel = new Label("Error: " + message);
+        errorLabel.getStyleClass().add("error-label");
+        errorLabel.setStyle("-fx-padding: 32;");
+        cardContainer.getChildren().clear();
+        cardContainer.getChildren().add(errorLabel);
     }
 }
