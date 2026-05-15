@@ -12,6 +12,11 @@ EKİP ÜYELERİ
 2. Umar Muskiev    (GitHub: LOKAR1432)
 
 ================================================================
+GITHUB REPO
+================================================================
+https://github.com/tolgab35/spaced-repetition-language-learning
+
+================================================================
 PROJE KONUSU
 ================================================================
 Oyunlaştırılmış Aralıklı Tekrar Algoritması Kullanan
