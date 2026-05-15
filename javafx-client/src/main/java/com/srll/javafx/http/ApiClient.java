@@ -92,9 +92,13 @@ public class ApiClient {
 
             int status = response.statusCode();
             if (status == 401) {
+                boolean hadSession = SessionManager.getInstance().isLoggedIn();
                 SessionManager.getInstance().clearSession();
-                Platform.runLater(() -> MainApp.navigate("login.fxml"));
-                throw new ApiException(401, "Session expired. Please log in again.");
+                if (hadSession) {
+                    Platform.runLater(() -> MainApp.navigate("login.fxml"));
+                    throw new ApiException(401, "Session expired. Please log in again.");
+                }
+                throw new ApiException(401, "Invalid credentials. Please check your username and password.");
             }
             if (status == 204 || responseType.getType() == Void.class) {
                 if (status < 200 || status >= 300) {
