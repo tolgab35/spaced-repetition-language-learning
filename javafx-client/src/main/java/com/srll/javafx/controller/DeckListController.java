@@ -96,7 +96,11 @@ public class DeckListController {
         Button reviewBtn = new Button("Review");
         reviewBtn.getStyleClass().add("btn-mini");
         reviewBtn.setGraphic(Icons.of(Icons.PLAY, 13, "#1A1A2E"));
-        reviewBtn.setOnAction(e -> MainApp.navigate("review.fxml"));
+        reviewBtn.setOnAction(e -> {
+            selectedDeckId = deck.id();
+            selectedDeckName = deck.name();
+            MainApp.navigate("review.fxml");
+        });
 
         Button cardsBtn = new Button("Cards");
         cardsBtn.getStyleClass().add("btn-mini-alt");

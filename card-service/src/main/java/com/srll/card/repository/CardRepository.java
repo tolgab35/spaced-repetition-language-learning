@@ -17,4 +17,7 @@ public interface CardRepository extends JpaRepository<Card, Long> {
 
     @Query("SELECT c FROM Card c WHERE c.deck.userId = :userId AND c.nextReview <= :now ORDER BY c.nextReview")
     List<Card> findDueCards(@Param("userId") Long userId, @Param("now") LocalDateTime now);
+
+    @Query("SELECT c FROM Card c WHERE c.deck.userId = :userId AND c.deck.id = :deckId AND c.nextReview <= :now ORDER BY c.nextReview")
+    List<Card> findDueCardsByDeck(@Param("userId") Long userId, @Param("deckId") Long deckId, @Param("now") LocalDateTime now);
 }

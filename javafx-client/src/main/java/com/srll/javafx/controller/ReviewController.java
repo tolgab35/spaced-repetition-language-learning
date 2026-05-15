@@ -66,10 +66,12 @@ public class ReviewController {
         frontLabel.setText("Loading...");
         showAnswerBtn.setDisable(true);
 
+        Long deckId = DeckListController.selectedDeckId;
+
         Task<List<CardResponse>> task = new Task<>() {
             @Override
             protected List<CardResponse> call() throws Exception {
-                return cardService.getDueCards();
+                return deckId != null ? cardService.getDueCards(deckId) : cardService.getDueCards();
             }
         };
 
@@ -132,7 +134,9 @@ public class ReviewController {
 
         Region trophyIcon = Icons.of(Icons.TROPHY, 56, "#FFC93C");
 
-        Label titleLabel = new Label("Session Complete!");
+        String deckName = DeckListController.selectedDeckName;
+        String title = deckName != null ? "Session Complete! — " + deckName : "Session Complete!";
+        Label titleLabel = new Label(title);
         titleLabel.setStyle("-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #1A1A2E;");
 
         Label reviewedLabel = new Label("Reviewed: " + reviewedCount + " cards");

@@ -26,9 +26,14 @@ public class CardController {
     }
 
     @GetMapping("/api/cards/due")
-    public ResponseEntity<ApiResponse<List<CardResponse>>> getDueCards(HttpServletRequest request) {
+    public ResponseEntity<ApiResponse<List<CardResponse>>> getDueCards(
+            @RequestParam(required = false) Long deckId,
+            HttpServletRequest request) {
         Long userId = extractUserId(request);
-        return ResponseEntity.ok(ApiResponse.ok(cardService.getDueCards(userId)));
+        List<CardResponse> cards = deckId != null
+                ? cardService.getDueCards(userId, deckId)
+                : cardService.getDueCards(userId);
+        return ResponseEntity.ok(ApiResponse.ok(cards));
     }
 
     @PostMapping("/api/decks/{deckId}/cards")

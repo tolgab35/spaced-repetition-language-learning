@@ -44,6 +44,12 @@ public class CardService {
                 .toList();
     }
 
+    public List<CardResponse> getDueCards(Long userId, Long deckId) {
+        return cardRepository.findDueCardsByDeck(userId, deckId, LocalDateTime.now()).stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
     @Transactional
     public CardResponse createCard(Long deckId, CardRequest request, Long userId) {
         Deck deck = deckRepository.findByIdAndUserId(deckId, userId)

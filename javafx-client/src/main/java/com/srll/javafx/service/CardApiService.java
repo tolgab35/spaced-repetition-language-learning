@@ -56,6 +56,14 @@ public class CardApiService {
         return response.data();
     }
 
+    public List<CardResponse> getDueCards(Long deckId) {
+        ApiResponse<List<CardResponse>> response = ApiClient.get(
+                "/api/cards/due?deckId=" + deckId,
+                new TypeReference<>() {}
+        );
+        return response.data();
+    }
+
     public CardResponse reviewCard(Long cardId, int rating) {
         ApiResponse<CardResponse> response = ApiClient.post(
                 "/api/cards/" + cardId + "/review",
