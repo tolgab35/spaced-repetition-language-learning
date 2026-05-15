@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.srll.javafx.MainApp;
 import com.srll.javafx.session.SessionManager;
+import com.srll.javafx.ui.Dialogs;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 
@@ -119,6 +120,8 @@ public class ApiClient {
                 alert.setTitle("Connection Error");
                 alert.setHeaderText("Backend is unreachable");
                 alert.setContentText(msg);
+                alert.initOwner(MainApp.getPrimaryStage());
+                Dialogs.style(alert.getDialogPane());
                 alert.showAndWait();
             });
             throw new ApiException(msg, e);

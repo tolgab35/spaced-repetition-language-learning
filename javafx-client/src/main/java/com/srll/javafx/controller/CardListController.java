@@ -4,11 +4,11 @@ import com.srll.javafx.MainApp;
 import com.srll.javafx.http.ApiException;
 import com.srll.javafx.http.dto.CardResponse;
 import com.srll.javafx.service.CardApiService;
+import com.srll.javafx.ui.Dialogs;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -68,7 +68,8 @@ public class CardListController {
             private final HBox   buttons   = new HBox(8, editBtn, deleteBtn);
 
             {
-                deleteBtn.setStyle("-fx-text-fill: #e74c3c;");
+                editBtn.getStyleClass().add("btn-mini-alt");
+                deleteBtn.getStyleClass().add("btn-mini-danger");
                 editBtn.setOnAction(e -> handleEditCard(getTableView().getItems().get(getIndex())));
                 deleteBtn.setOnAction(e -> handleDeleteCard(getTableView().getItems().get(getIndex())));
             }
@@ -120,17 +121,21 @@ public class CardListController {
         backArea.setPrefRowCount(3);
         backArea.setWrapText(true);
 
-        VBox content = new VBox(8,
-                new Label("Front:"), frontArea,
-                new Label("Back:"), backArea);
-        content.setPrefWidth(360);
-        content.setPadding(new Insets(12));
+        Label frontLabel = new Label("FRONT");
+        frontLabel.getStyleClass().add("field-label");
+        Label backLabel = new Label("BACK");
+        backLabel.getStyleClass().add("field-label");
+
+        VBox content = new VBox(8, frontLabel, frontArea, backLabel, backArea);
+        content.setPrefWidth(380);
 
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Add Card");
         dialog.setHeaderText("Create a new card");
+        dialog.initOwner(MainApp.getPrimaryStage());
         dialog.getDialogPane().setContent(content);
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        Dialogs.style(dialog.getDialogPane());
 
         Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
         okButton.setDisable(true);
@@ -167,17 +172,21 @@ public class CardListController {
         backArea.setPrefRowCount(3);
         backArea.setWrapText(true);
 
-        VBox content = new VBox(8,
-                new Label("Front:"), frontArea,
-                new Label("Back:"), backArea);
-        content.setPrefWidth(360);
-        content.setPadding(new Insets(12));
+        Label frontLabel = new Label("FRONT");
+        frontLabel.getStyleClass().add("field-label");
+        Label backLabel = new Label("BACK");
+        backLabel.getStyleClass().add("field-label");
+
+        VBox content = new VBox(8, frontLabel, frontArea, backLabel, backArea);
+        content.setPrefWidth(380);
 
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Edit Card");
         dialog.setHeaderText("Edit card");
+        dialog.initOwner(MainApp.getPrimaryStage());
         dialog.getDialogPane().setContent(content);
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        Dialogs.style(dialog.getDialogPane());
 
         Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
         frontArea.textProperty().addListener((obs, old, val) ->
@@ -207,6 +216,8 @@ public class CardListController {
         confirm.setTitle("Delete Card");
         confirm.setHeaderText("Delete this card?");
         confirm.setContentText("Front: " + card.front() + "\n\nThis action cannot be undone.");
+        confirm.initOwner(MainApp.getPrimaryStage());
+        Dialogs.style(confirm.getDialogPane());
 
         confirm.showAndWait().ifPresent(result -> {
             if (result != ButtonType.OK) return;

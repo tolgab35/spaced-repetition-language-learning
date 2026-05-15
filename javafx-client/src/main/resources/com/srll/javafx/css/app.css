@@ -457,6 +457,100 @@
     -fx-background-color: transparent;
 }
 
+/* ── Text area ────────────────────────────────────────────────────────── */
+.text-area {
+    -fx-background-color: #FFFDF5;
+    -fx-border-color: #1A1A2E;
+    -fx-border-width: 2.5;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-font-size: 14;
+    -fx-text-fill: #1A1A2E;
+    -fx-prompt-text-fill: #A8A496;
+}
+.text-area .content {
+    -fx-background-color: #FFFDF5;
+    -fx-background-radius: 6;
+    -fx-padding: 6 10;
+}
+.text-area:focused {
+    -fx-border-color: #FF6B6B;
+}
+.text-area .scroll-pane,
+.text-area .scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+/* ── Dialogs & Alerts ─────────────────────────────────────────────────── */
+.dialog-pane {
+    -fx-background-color: #FFF8E7;
+    -fx-padding: 0;
+}
+/* header strip (appears when setHeaderText is used) */
+.dialog-pane:header .header-panel {
+    -fx-background-color: #FFC93C;
+    -fx-border-color: #1A1A2E;
+    -fx-border-width: 0 0 3 0;
+    -fx-padding: 16 22;
+}
+.dialog-pane:header .header-panel .label {
+    -fx-font-size: 15;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1A1A2E;
+}
+/* collapse the alert-type graphic so layout stays clean */
+.dialog-pane .graphic-container {
+    -fx-pref-width: 0;
+    -fx-min-width: 0;
+    -fx-padding: 0;
+}
+/* content region */
+.dialog-pane > .content {
+    -fx-background-color: #FFF8E7;
+    -fx-padding: 18 22;
+}
+/* when content is just the plain contentText label (Alert) */
+.dialog-pane > .content.label {
+    -fx-font-size: 13;
+    -fx-text-fill: #1A1A2E;
+    -fx-wrap-text: true;
+    -fx-padding: 18 22;
+}
+/* button bar */
+.dialog-pane .button-bar {
+    -fx-background-color: #FFF8E7;
+    -fx-border-color: #1A1A2E;
+    -fx-border-width: 3 0 0 0;
+    -fx-padding: 14 22;
+}
+.dialog-pane .button-bar .button {
+    -fx-background-color: white;
+    -fx-text-fill: #1A1A2E;
+    -fx-font-size: 13;
+    -fx-font-weight: bold;
+    -fx-border-color: #1A1A2E;
+    -fx-border-width: 2.5;
+    -fx-border-radius: 7;
+    -fx-background-radius: 7;
+    -fx-padding: 8 18;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, #1A1A2E, 0, 1.0, 3, 3);
+}
+.dialog-pane .button-bar .button:hover {
+    -fx-background-color: #FFFDF5;
+}
+.dialog-pane .button-bar .button:pressed {
+    -fx-translate-x: 3;
+    -fx-translate-y: 3;
+    -fx-effect: null;
+}
+.dialog-pane .button-bar .button:default {
+    -fx-background-color: #FFC93C;
+}
+.dialog-pane .button-bar .button:default:hover {
+    -fx-background-color: #FFD45F;
+}
+
 /* ── Utility ──────────────────────────────────────────────────────────── */
 .error-label {
     -fx-text-fill: #E03131;

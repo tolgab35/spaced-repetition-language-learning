@@ -5,11 +5,11 @@ import com.srll.javafx.http.ApiException;
 import com.srll.javafx.http.dto.DeckResponse;
 import com.srll.javafx.service.DeckApiService;
 import com.srll.javafx.session.SessionManager;
+import com.srll.javafx.ui.Dialogs;
 import com.srll.javafx.ui.Icons;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -167,6 +167,8 @@ public class DeckListController {
         confirm.setTitle("Delete Deck");
         confirm.setHeaderText("Delete \"" + deck.name() + "\"?");
         confirm.setContentText("This will permanently delete the deck and all its cards. This action cannot be undone.");
+        confirm.initOwner(MainApp.getPrimaryStage());
+        Dialogs.style(confirm.getDialogPane());
 
         confirm.showAndWait().ifPresent(result -> {
             if (result != ButtonType.OK) return;
@@ -195,18 +197,26 @@ public class DeckListController {
         TextField langField = new TextField();
         langField.setPromptText("Language (e.g. English, Spanish)");
 
+        Label nameLabel = new Label("NAME");
+        nameLabel.getStyleClass().add("field-label");
+        Label descLabel = new Label("DESCRIPTION");
+        descLabel.getStyleClass().add("field-label");
+        Label langLabel = new Label("LANGUAGE");
+        langLabel.getStyleClass().add("field-label");
+
         VBox content = new VBox(8,
-                new Label("Name:"), nameField,
-                new Label("Description:"), descField,
-                new Label("Language:"), langField);
-        content.setPrefWidth(320);
-        content.setPadding(new Insets(12));
+                nameLabel, nameField,
+                descLabel, descField,
+                langLabel, langField);
+        content.setPrefWidth(340);
 
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("New Deck");
         dialog.setHeaderText("Create a new deck");
+        dialog.initOwner(MainApp.getPrimaryStage());
         dialog.getDialogPane().setContent(content);
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        Dialogs.style(dialog.getDialogPane());
 
         Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
         okButton.setDisable(true);
