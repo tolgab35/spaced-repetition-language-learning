@@ -27,8 +27,7 @@
 
     <center>
         <TableView fx:id="cardTable"
-                   style="-fx-padding: 16;"
-                   columnResizePolicy="CONSTRAINED_RESIZE_POLICY">
+                   style="-fx-padding: 16;">
             <columns>
                 <TableColumn fx:id="frontColumn"      text="Front"       prefWidth="200" />
                 <TableColumn fx:id="backColumn"       text="Back"        prefWidth="200" />

@@ -173,6 +173,7 @@ public class ProgressController {
     }
 
     private void populateLeaderboard(List<LeaderboardEntry> entries) {
+        leaderboardTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
         String currentUserId = String.valueOf(SessionManager.getInstance().getUserId());
 
         rankColumn.setCellFactory(col -> new TableCell<>() {

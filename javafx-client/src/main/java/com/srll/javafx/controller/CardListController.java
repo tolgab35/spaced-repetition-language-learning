@@ -47,6 +47,7 @@ public class CardListController {
     }
 
     private void setupColumns() {
+        cardTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
         frontColumn.setCellValueFactory(data ->
                 new SimpleStringProperty(data.getValue().front()));
         backColumn.setCellValueFactory(data ->
