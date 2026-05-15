@@ -93,6 +93,7 @@ public class ReviewController {
 
         showAnswerBtn.setVisible(true);
         showAnswerBtn.setManaged(true);
+        showAnswerBtn.setDisable(false);
         ratingBox.setVisible(false);
         ratingBox.setManaged(false);
 
