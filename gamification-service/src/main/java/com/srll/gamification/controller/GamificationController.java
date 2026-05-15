@@ -41,6 +41,7 @@ public class GamificationController {
         r.setTotalCorrect(progress.getTotalCorrect());
         r.setLastReviewDate(progress.getLastReviewDate());
         r.setEarnedBadges(progress.getEarnedBadges());
+        r.setStreakDays(progress.getCurrentStreak());
         return r;
     }
 

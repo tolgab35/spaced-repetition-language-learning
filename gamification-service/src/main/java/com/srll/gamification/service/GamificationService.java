@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,7 +15,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GamificationService {
 
-    private static final String STREAK_KEY   = "streak:";
     private static final String LEADERBOARD  = "leaderboard";
     private static final int    XP_PER_PASS  = 10;
     private static final int    XP_PER_FAIL  = 2;
@@ -37,16 +35,15 @@ public class GamificationService {
         if (event.isPassed()) {
             progress.setTotalCorrect(progress.getTotalCorrect() + 1);
         }
+
+        updateStreak(progress);
+
         progress.setLastReviewDate(LocalDate.now());
         progress.setUpdatedAt(LocalDateTime.now());
 
-        progressRepository.save(progress);
-
-        updateStreak(event.getUserId());
         updateLeaderboard(event.getUserId(), progress.getXp());
 
-        long streakDays = getStreak(event.getUserId());
-        badgeObservers.forEach(o -> o.onProgressUpdated(progress, streakDays));
+        badgeObservers.forEach(o -> o.onProgressUpdated(progress, progress.getCurrentStreak()));
 
         progressRepository.save(progress);
     }
@@ -64,15 +61,19 @@ public class GamificationService {
                 .toList();
     }
 
-    private void updateStreak(Long userId) {
-        String key = STREAK_KEY + userId;
-        redisTemplate.opsForValue().set(key, String.valueOf(
-                getStreak(userId) + 1), Duration.ofDays(2));
-    }
+    private void updateStreak(UserProgress progress) {
+        LocalDate today = LocalDate.now();
+        LocalDate lastReview = progress.getLastReviewDate();
 
-    private long getStreak(Long userId) {
-        String val = redisTemplate.opsForValue().get(STREAK_KEY + userId);
-        return val == null ? 0L : Long.parseLong(val);
+        if (lastReview == null) {
+            progress.setCurrentStreak(1);
+        } else if (lastReview.equals(today)) {
+            // already reviewed today — don't change streak
+        } else if (lastReview.equals(today.minusDays(1))) {
+            progress.setCurrentStreak(progress.getCurrentStreak() + 1);
+        } else {
+            progress.setCurrentStreak(1);
+        }
     }
 
     private void updateLeaderboard(Long userId, int xp) {

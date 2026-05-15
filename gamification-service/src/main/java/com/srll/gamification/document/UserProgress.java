@@ -39,6 +39,9 @@ public class UserProgress {
     private LocalDate lastReviewDate;
 
     @Builder.Default
+    private int currentStreak = 0;
+
+    @Builder.Default
     private List<String> earnedBadges = new ArrayList<>();
 
     private LocalDateTime updatedAt;
