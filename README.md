@@ -155,7 +155,8 @@ POST /api/cards/{id}/review
 ![Tekrar](docs/screenshots/review.png)
 
 <!-- Ekran görüntüsü: İlerleme ekranı (progress.fxml) - XP çubuğu, rozetler, liderboard -->
-<!-- ![İlerleme](docs/screenshots/progress.png) -->
+
+![İlerleme](docs/screenshots/progress.png)
 
 ---
 
