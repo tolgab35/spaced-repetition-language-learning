@@ -14,16 +14,12 @@ import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
@@ -39,10 +35,7 @@ public class ProgressController {
     @FXML private GridPane  statsGrid;
     @FXML private Label     badgeTitle;
     @FXML private FlowPane  badgePane;
-    @FXML private TableView<LeaderboardEntry>          leaderboardTable;
-    @FXML private TableColumn<LeaderboardEntry, String> rankColumn;
-    @FXML private TableColumn<LeaderboardEntry, String> userColumn;
-    @FXML private TableColumn<LeaderboardEntry, String> xpColumn;
+    @FXML private VBox      leaderboardRows;
 
     private final GamificationApiService gamificationService = new GamificationApiService();
 
@@ -93,7 +86,10 @@ public class ProgressController {
             String msg = ex instanceof ApiException api
                     ? api.getMessage()
                     : "Connection error. Is the backend running?";
-            leaderboardTable.setPlaceholder(new Label("Error: " + msg));
+            Label errLabel = new Label("Error: " + msg);
+            errLabel.getStyleClass().add("error-label");
+            errLabel.setStyle("-fx-padding: 16;");
+            leaderboardRows.getChildren().setAll(errLabel);
         }));
 
         new Thread(task).start();
@@ -206,34 +202,76 @@ public class ProgressController {
     }
 
     private void populateLeaderboard(List<LeaderboardEntry> entries) {
-        leaderboardTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
         String currentUserId = String.valueOf(SessionManager.getInstance().getUserId());
+        leaderboardRows.getChildren().clear();
+        leaderboardRows.getChildren().add(buildLeaderboardHeader());
 
-        rankColumn.setCellFactory(col -> new TableCell<>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                setText(empty ? null : String.valueOf(getIndex() + 1));
-            }
-        });
-        userColumn.setCellValueFactory(data ->
-                new SimpleStringProperty("User " + data.getValue().userId()));
-        xpColumn.setCellValueFactory(data ->
-                new SimpleStringProperty(String.valueOf((int) data.getValue().xp())));
+        List<LeaderboardEntry> top10 = entries.stream().limit(10).toList();
+        for (int i = 0; i < top10.size(); i++) {
+            leaderboardRows.getChildren().add(
+                buildLeaderboardRow(i + 1, top10.get(i), currentUserId, i == top10.size() - 1)
+            );
+        }
 
-        leaderboardTable.setRowFactory(tv -> new TableRow<>() {
-            @Override
-            protected void updateItem(LeaderboardEntry entry, boolean empty) {
-                super.updateItem(entry, empty);
-                if (!empty && entry != null && entry.userId().equals(currentUserId)) {
-                    setStyle("-fx-background-color: #FFE9A8;");
-                } else {
-                    setStyle("");
-                }
-            }
-        });
+        if (top10.isEmpty()) {
+            Label empty = new Label("No entries yet.");
+            empty.setStyle("-fx-padding: 16; -fx-text-fill: #6B6B7B;");
+            leaderboardRows.getChildren().add(empty);
+        }
+    }
 
-        leaderboardTable.getItems().setAll(entries);
+    private HBox buildLeaderboardHeader() {
+        Label hRank = new Label("#");
+        hRank.getStyleClass().add("lb-header-cell");
+        hRank.setMinWidth(50);
+
+        Label hUser = new Label("User");
+        hUser.getStyleClass().add("lb-header-cell");
+        HBox.setHgrow(hUser, Priority.ALWAYS);
+
+        Label hXp = new Label("XP");
+        hXp.getStyleClass().add("lb-header-cell");
+        hXp.setMinWidth(70);
+
+        HBox header = new HBox(12, hRank, hUser, hXp);
+        header.getStyleClass().add("lb-header");
+        header.setAlignment(Pos.CENTER_LEFT);
+        return header;
+    }
+
+    private HBox buildLeaderboardRow(int rank, LeaderboardEntry entry, String currentUserId, boolean isLast) {
+        boolean isCurrentUser = entry.userId().equals(currentUserId);
+
+        Label rankLabel = new Label(String.valueOf(rank));
+        rankLabel.getStyleClass().addAll("lb-rank-badge", rankStyleClass(rank));
+        rankLabel.setMinWidth(34);
+        rankLabel.setMaxWidth(34);
+        rankLabel.setAlignment(Pos.CENTER);
+
+        Label userLabel = new Label("User " + entry.userId());
+        userLabel.getStyleClass().add("lb-username");
+        if (isCurrentUser) userLabel.getStyleClass().add("lb-username-current");
+        HBox.setHgrow(userLabel, Priority.ALWAYS);
+
+        Label xpLabel = new Label((int) entry.xp() + " XP");
+        xpLabel.getStyleClass().add("lb-xp-pill");
+        if (rank <= 3) xpLabel.getStyleClass().add("lb-xp-pill-top");
+
+        HBox row = new HBox(12, rankLabel, userLabel, xpLabel);
+        row.setAlignment(Pos.CENTER_LEFT);
+        row.getStyleClass().add("lb-row");
+        if (isCurrentUser) row.getStyleClass().add("lb-row-current");
+        if (isLast) row.getStyleClass().add("lb-row-last");
+        return row;
+    }
+
+    private String rankStyleClass(int rank) {
+        return switch (rank) {
+            case 1 -> "lb-rank-gold";
+            case 2 -> "lb-rank-silver";
+            case 3 -> "lb-rank-bronze";
+            default -> "lb-rank-default";
+        };
     }
 
     @FXML

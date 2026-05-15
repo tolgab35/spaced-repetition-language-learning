@@ -5,8 +5,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
@@ -54,14 +52,7 @@
                     <!-- LeaderboardPanel -->
                     <VBox spacing="12" styleClass="panel">
                         <Label text="Top 10 Leaderboard" styleClass="panel-title" />
-                        <TableView fx:id="leaderboardTable"
-                                   prefHeight="280">
-                            <columns>
-                                <TableColumn fx:id="rankColumn" text="#"    prefWidth="50"  sortable="false" />
-                                <TableColumn fx:id="userColumn" text="User" prefWidth="200" sortable="false" />
-                                <TableColumn fx:id="xpColumn"   text="XP"   prefWidth="100" sortable="false" />
-                            </columns>
-                        </TableView>
+                        <VBox fx:id="leaderboardRows" styleClass="lb-container" />
                     </VBox>
 
                 </VBox>

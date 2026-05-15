@@ -601,6 +601,90 @@
     -fx-background-color: #FFD45F;
 }
 
+/* ── Leaderboard rows ─────────────────────────────────────────────────── */
+.lb-container {
+    -fx-background-color: white;
+    -fx-border-color: #1A1A2E;
+    -fx-border-width: 2.5;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+.lb-header {
+    -fx-background-color: #FFC93C;
+    -fx-padding: 9 16;
+    -fx-border-color: transparent transparent #1A1A2E transparent;
+    -fx-border-width: 0 0 2 0;
+}
+.lb-header-cell {
+    -fx-font-size: 12;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1A1A2E;
+}
+.lb-row {
+    -fx-padding: 11 16;
+    -fx-border-color: transparent transparent #E8E4D8 transparent;
+    -fx-border-width: 0 0 1 0;
+}
+.lb-row-last {
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+}
+.lb-row-current {
+    -fx-background-color: #FFF5CC;
+}
+.lb-rank-badge {
+    -fx-font-size: 13;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-border-width: 2;
+    -fx-border-color: #1A1A2E;
+    -fx-padding: 3 6;
+    -fx-min-width: 34;
+    -fx-max-width: 34;
+}
+.lb-rank-gold {
+    -fx-background-color: #FFC93C;
+    -fx-text-fill: #1A1A2E;
+}
+.lb-rank-silver {
+    -fx-background-color: #C8C8C8;
+    -fx-text-fill: #1A1A2E;
+}
+.lb-rank-bronze {
+    -fx-background-color: #CD8C52;
+    -fx-text-fill: white;
+}
+.lb-rank-default {
+    -fx-background-color: #F0EDE0;
+    -fx-text-fill: #6B6B7B;
+}
+.lb-username {
+    -fx-font-size: 14;
+    -fx-text-fill: #1A1A2E;
+}
+.lb-username-current {
+    -fx-font-weight: bold;
+}
+.lb-xp-pill {
+    -fx-font-size: 13;
+    -fx-font-weight: bold;
+    -fx-text-fill: #6B6B7B;
+    -fx-padding: 3 10;
+    -fx-background-color: #F0EDE0;
+    -fx-background-radius: 20;
+    -fx-border-color: #C9C5B8;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 20;
+}
+.lb-xp-pill-top {
+    -fx-text-fill: #1A1A2E;
+    -fx-background-color: #FFF5CC;
+    -fx-border-color: #FFC93C;
+    -fx-border-width: 1.5;
+}
+
 /* ── Utility ──────────────────────────────────────────────────────────── */
 .error-label {
     -fx-text-fill: #E03131;
