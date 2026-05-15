@@ -248,7 +248,7 @@ public class ProgressController {
         rankLabel.setMaxWidth(34);
         rankLabel.setAlignment(Pos.CENTER);
 
-        Label userLabel = new Label("User " + entry.userId());
+        Label userLabel = new Label(entry.username() != null ? entry.username() : "User " + entry.userId());
         userLabel.getStyleClass().add("lb-username");
         if (isCurrentUser) userLabel.getStyleClass().add("lb-username-current");
         HBox.setHgrow(userLabel, Priority.ALWAYS);
