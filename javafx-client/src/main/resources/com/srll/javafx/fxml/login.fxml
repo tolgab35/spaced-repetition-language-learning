@@ -29,7 +29,7 @@
                 </shape>
             </Region>
         </StackPane>
-        <Label text="SRLL" styleClass="auth-title" />
+        <Label text="DeckOS" styleClass="auth-title" />
         <Label text="Spaced Repetition Language Learning"
                styleClass="auth-subtitle" />
 

@@ -16,7 +16,7 @@ public class MainApp extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         primaryStage = stage;
-        primaryStage.setTitle("SRLL — Spaced Repetition Language Learning");
+        primaryStage.setTitle("DeckOS");
         primaryStage.setMinWidth(640);
         primaryStage.setMinHeight(480);
         navigate("login.fxml");

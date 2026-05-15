@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jmeterTestPlan version="1.2" properties="5.0" jmeter="5.6.3">
   <hashTree>
-    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="SRLL - /api/cards/due Load Test" enabled="true">
-      <stringProp name="TestPlan.comments">Spaced Repetition Language Learning — GET /api/cards/due yük testi</stringProp>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="DeckOS - /api/cards/due Load Test" enabled="true">
+      <stringProp name="TestPlan.comments">DeckOS — GET /api/cards/due yük testi</stringProp>
       <boolProp name="TestPlan.functional_mode">false</boolProp>
       <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
       <boolProp name="TestPlan.serialize_threadgroups">true</boolProp>

@@ -1,4 +1,4 @@
-# SRLL JMeter Yük Testi - Çalıştırma Scripti
+# DeckOS JMeter Yük Testi - Çalıştırma Scripti
 # Kullanım: .\run-test.ps1
 # Opsiyonel: .\run-test.ps1 -Threads 100 -Loops 30
 
@@ -47,7 +47,7 @@ $jmxFile = Join-Path $scriptDir "cards-due-load-test.jmx"
 
 Write-Host ""
 Write-Host "========================================" -ForegroundColor Cyan
-Write-Host " SRLL Load Test Basliyor" -ForegroundColor Cyan
+Write-Host " DeckOS Load Test Basliyor" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host " Hedef : http://${TargetHost}:${Port}/api/cards/due"
 Write-Host " Thread: $Threads kullanici"
