@@ -68,7 +68,7 @@ public class DeckListController {
 
     private HBox createDeckCard(DeckResponse deck) {
         Label nameLabel = new Label(deck.name());
-        nameLabel.setStyle("-fx-font-size: 16; -fx-font-weight: bold;");
+        nameLabel.setStyle("-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
 
         Label langLabel = new Label(deck.language());
         langLabel.setStyle("-fx-text-fill: #7f8c8d; -fx-font-size: 12;");
