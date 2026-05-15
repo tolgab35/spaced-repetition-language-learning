@@ -44,6 +44,11 @@ hs_err_pid*
 build/
 .kotlin/
 
+# JMeter generated output
+jmeter/results/
+jmeter/report/
+results/
+
 # Misc
 *.swp
 *.swo
