@@ -134,8 +134,18 @@ public class ApiClient {
             case 403 -> "You don't have permission to perform this action.";
             case 404 -> "The requested resource was not found.";
             case 500 -> "Server error. Is the backend running?";
-            default  -> "Unexpected error (" + statusCode + "): " + body;
+            default  -> extractMessage(body);
         };
+    }
+
+    private static String extractMessage(String body) {
+        try {
+            var node = MAPPER.readTree(body);
+            if (node.has("message") && !node.get("message").isNull()) {
+                return node.get("message").asText();
+            }
+        } catch (Exception ignored) {}
+        return body;
     }
 
     public static ObjectMapper getMapper() {
