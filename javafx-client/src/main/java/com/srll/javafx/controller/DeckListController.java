@@ -96,6 +96,7 @@ public class DeckListController {
         Button reviewBtn = new Button("Review");
         reviewBtn.getStyleClass().add("btn-mini");
         reviewBtn.setGraphic(Icons.of(Icons.PLAY, 13, "#1A1A2E"));
+        reviewBtn.setDisable(deck.cardCount() == 0);
         reviewBtn.setOnAction(e -> {
             selectedDeckId = deck.id();
             selectedDeckName = deck.name();
