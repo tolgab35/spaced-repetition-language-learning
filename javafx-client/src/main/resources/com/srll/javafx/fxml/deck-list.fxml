@@ -7,21 +7,29 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.SVGPath?>
 
 <BorderPane xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.srll.javafx.controller.DeckListController">
 
     <top>
-        <HBox alignment="CENTER_LEFT" spacing="12"
-              style="-fx-padding: 16; -fx-background-color: #3498db;">
-            <Label text="My Decks"
-                   style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: white;" />
+        <HBox alignment="CENTER_LEFT" spacing="12" styleClass="app-header">
+            <Label text="My Decks" styleClass="header-title" />
             <Region HBox.hgrow="ALWAYS" />
             <Button text="Progress" onAction="#handleProgress"
-                    style="-fx-background-color: white; -fx-text-fill: #3498db;" />
+                    styleClass="header-btn-light">
+                <graphic>
+                    <Region styleClass="btn-icon"
+                            minWidth="15" minHeight="15" maxWidth="15" maxHeight="15">
+                        <shape>
+                            <SVGPath content="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z" />
+                        </shape>
+                    </Region>
+                </graphic>
+            </Button>
             <Button text="Log Out" onAction="#handleLogout"
-                    style="-fx-background-color: #e74c3c; -fx-text-fill: white;" />
+                    styleClass="header-btn-danger" />
         </HBox>
     </top>
 
@@ -29,19 +37,18 @@
         <ScrollPane fitToWidth="true"
                     style="-fx-background: transparent; -fx-background-color: transparent;">
             <content>
-                <VBox fx:id="deckListContainer" spacing="12"
-                      style="-fx-padding: 24; -fx-background-color: #f5f6fa;" />
+                <VBox fx:id="deckListContainer" spacing="12" styleClass="deck-list-bg" />
             </content>
         </ScrollPane>
     </center>
 
     <bottom>
         <HBox alignment="CENTER_RIGHT"
-              style="-fx-padding: 12 24; -fx-background-color: white;
-                     -fx-border-color: #e0e0e0; -fx-border-width: 1 0 0 0;">
+              style="-fx-padding: 14 24; -fx-background-color: #FFF8E7;
+                     -fx-border-color: #1A1A2E; -fx-border-width: 3 0 0 0;">
             <Button text="+ New Deck" onAction="#handleNewDeck"
-                    style="-fx-background-color: #3498db; -fx-text-fill: white;
-                           -fx-font-size: 14; -fx-padding: 8 16;" />
+                    styleClass="btn-primary"
+                    style="-fx-padding: 8 20;" />
         </HBox>
     </bottom>
 

@@ -5,43 +5,52 @@
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.SVGPath?>
 
 <BorderPane xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.srll.javafx.controller.ReviewController">
 
     <top>
-        <HBox alignment="CENTER_LEFT" spacing="16"
-              style="-fx-padding: 16; -fx-background-color: #2c3e50;">
-            <Button text="✕ End Session" onAction="#handleEndSession"
-                    style="-fx-background-color: #e74c3c; -fx-text-fill: white;" />
+        <HBox alignment="CENTER_LEFT" spacing="16" styleClass="app-header">
+            <Button text="End Session" onAction="#handleEndSession"
+                    styleClass="header-btn-danger">
+                <graphic>
+                    <Region styleClass="btn-icon"
+                            minWidth="14" minHeight="14" maxWidth="14" maxHeight="14">
+                        <shape>
+                            <SVGPath content="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+                        </shape>
+                    </Region>
+                </graphic>
+            </Button>
             <Label fx:id="progressLabel" text="Card 0 / 0"
-                   style="-fx-text-fill: white; -fx-font-size: 14;" />
+                   styleClass="header-progress-label" />
             <ProgressBar fx:id="sessionProgress" progress="0"
-                         HBox.hgrow="ALWAYS" maxWidth="Infinity" />
+                         HBox.hgrow="ALWAYS" maxWidth="Infinity"
+                         styleClass="session-progress" />
         </HBox>
     </top>
 
     <center>
-        <StackPane fx:id="cardContainer"
-                   style="-fx-padding: 40; -fx-background-color: #f5f6fa;">
+        <StackPane fx:id="cardContainer" styleClass="review-bg"
+                   style="-fx-padding: 40;">
 
             <StackPane fx:id="frontFace"
-                       style="-fx-background-color: white; -fx-background-radius: 12;
-                              -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 12, 0, 0, 4);
-                              -fx-min-width: 480; -fx-min-height: 280;">
+                       minWidth="480" minHeight="280"
+                       styleClass="card-front">
                 <Label fx:id="frontLabel" text="" wrapText="true" maxWidth="420"
-                       style="-fx-font-size: 22; -fx-text-alignment: center;" />
+                       styleClass="card-front-text" />
             </StackPane>
 
             <StackPane fx:id="backFace" visible="false" managed="false"
-                       style="-fx-background-color: white; -fx-background-radius: 12;
-                              -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 12, 0, 0, 4);
-                              -fx-min-width: 480; -fx-min-height: 280;">
+                       minWidth="480" minHeight="280"
+                       styleClass="card-back">
                 <Label fx:id="backLabel" text="" wrapText="true" maxWidth="420"
-                       style="-fx-font-size: 22; -fx-text-alignment: center;" />
+                       styleClass="card-back-text" />
             </StackPane>
 
         </StackPane>
@@ -49,24 +58,23 @@
 
     <bottom>
         <VBox fx:id="buttonArea" alignment="CENTER" spacing="12"
-              style="-fx-padding: 24; -fx-background-color: white;
-                     -fx-border-color: #e0e0e0; -fx-border-width: 1 0 0 0;">
+              style="-fx-padding: 20 24; -fx-background-color: #FFF8E7;
+                     -fx-border-color: #1A1A2E; -fx-border-width: 3 0 0 0;">
 
             <Button fx:id="showAnswerBtn" text="Show Answer"
                     onAction="#handleShowAnswer"
-                    maxWidth="Infinity" prefHeight="48"
-                    style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 16;" />
+                    maxWidth="Infinity" styleClass="btn-show-answer" />
 
             <HBox fx:id="ratingBox" visible="false" managed="false"
-                  alignment="CENTER" spacing="12">
-                <Button text="Again (0)"  onAction="#handleAgain" prefWidth="120" prefHeight="60"
-                        style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-size: 13;" />
-                <Button text="Hard (3)"   onAction="#handleHard"  prefWidth="120" prefHeight="60"
-                        style="-fx-background-color: #e67e22; -fx-text-fill: white; -fx-font-size: 13;" />
-                <Button text="Good (4)"   onAction="#handleGood"  prefWidth="120" prefHeight="60"
-                        style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 13;" />
-                <Button text="Easy (5)"   onAction="#handleEasy"  prefWidth="120" prefHeight="60"
-                        style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-size: 13;" />
+                  alignment="CENTER" spacing="10">
+                <Button text="Again" onAction="#handleAgain"
+                        prefWidth="110" prefHeight="56" styleClass="btn-again" />
+                <Button text="Hard"  onAction="#handleHard"
+                        prefWidth="110" prefHeight="56" styleClass="btn-hard" />
+                <Button text="Good"  onAction="#handleGood"
+                        prefWidth="110" prefHeight="56" styleClass="btn-good" />
+                <Button text="Easy"  onAction="#handleEasy"
+                        prefWidth="110" prefHeight="56" styleClass="btn-easy" />
             </HBox>
 
         </VBox>

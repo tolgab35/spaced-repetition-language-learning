@@ -6,26 +6,57 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.SVGPath?>
 
-<VBox xmlns="http://javafx.com/javafx/21"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.srll.javafx.controller.LoginController"
-      alignment="CENTER" spacing="16" style="-fx-padding: 40;">
+<StackPane xmlns="http://javafx.com/javafx/21"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.srll.javafx.controller.LoginController"
+           styleClass="auth-bg">
 
-    <Label text="SRLL" style="-fx-font-size: 32; -fx-font-weight: bold;" />
+    <VBox alignment="CENTER" spacing="9" maxWidth="370"
+          styleClass="auth-card"
+          style="-fx-padding: 40 44;">
 
-    <TextField fx:id="usernameField" promptText="Username" maxWidth="300" prefWidth="300" />
-    <PasswordField fx:id="passwordField" promptText="Password" maxWidth="300" prefWidth="300" />
+        <StackPane styleClass="logo-tile"
+                   minWidth="68" minHeight="68" maxWidth="68" maxHeight="68">
+            <Region styleClass="logo-icon"
+                    minWidth="38" minHeight="38" maxWidth="38" maxHeight="38">
+                <shape>
+                    <SVGPath content="M11.99 18.54l-7.37-5.73L3 14.07l9 7 9-7-1.63-1.27-7.38 5.74zM12 16l7.36-5.73L21 9l-9-7-9 7 1.63 1.27L12 16z" />
+                </shape>
+            </Region>
+        </StackPane>
+        <Label text="SRLL" styleClass="auth-title" />
+        <Label text="Spaced Repetition Language Learning"
+               styleClass="auth-subtitle" />
 
-    <Button fx:id="loginButton" text="Log In" defaultButton="true"
-            maxWidth="300" prefWidth="300" onAction="#handleLogin" />
+        <Region prefHeight="14" />
 
-    <ProgressIndicator fx:id="loadingIndicator" visible="false" maxWidth="32" maxHeight="32" />
+        <Label text="USERNAME" styleClass="field-label" maxWidth="Infinity" />
+        <TextField fx:id="usernameField" promptText="Enter your username"
+                   maxWidth="Infinity" />
 
-    <Label fx:id="errorLabel" text="" wrapText="true" maxWidth="300"
-           style="-fx-text-fill: #e74c3c;" visible="false" />
+        <Label text="PASSWORD" styleClass="field-label" maxWidth="Infinity" />
+        <PasswordField fx:id="passwordField" promptText="Enter your password"
+                       maxWidth="Infinity" />
 
-    <Hyperlink text="Don't have an account? Register" onAction="#handleRegister" />
+        <Region prefHeight="4" />
 
-</VBox>
+        <Button fx:id="loginButton" text="Sign In  →" defaultButton="true"
+                maxWidth="Infinity" onAction="#handleLogin"
+                styleClass="btn-primary" />
+
+        <ProgressIndicator fx:id="loadingIndicator" visible="false"
+                           maxWidth="32" maxHeight="32" />
+
+        <Label fx:id="errorLabel" text="" wrapText="true" maxWidth="Infinity"
+               styleClass="error-label" visible="false" />
+
+        <Hyperlink text="Don't have an account? Register" onAction="#handleRegister"
+                   styleClass="link" />
+    </VBox>
+
+</StackPane>

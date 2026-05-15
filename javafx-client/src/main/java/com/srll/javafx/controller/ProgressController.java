@@ -6,6 +6,7 @@ import com.srll.javafx.http.dto.LeaderboardEntry;
 import com.srll.javafx.http.dto.ProgressResponse;
 import com.srll.javafx.service.GamificationApiService;
 import com.srll.javafx.session.SessionManager;
+import com.srll.javafx.ui.Icons;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -22,6 +23,8 @@ import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
@@ -115,21 +118,28 @@ public class ProgressController {
                 : (int) Math.round((double) p.totalCorrect() / p.totalReviews() * 100);
         String lastReview = p.lastReviewDate() != null ? p.lastReviewDate().toString() : "—";
 
-        addStatRow(0, "Total Reviews",  String.valueOf(p.totalReviews()));
-        addStatRow(1, "Correct",        p.totalCorrect() + "  (" + accuracy + "%)");
-        addStatRow(2, "Current Streak", p.streakDays() + " days 🔥");
-        addStatRow(3, "Last Review",    lastReview);
+        addStatRow(0, "Total Reviews",  String.valueOf(p.totalReviews()), null);
+        addStatRow(1, "Correct",        p.totalCorrect() + "  (" + accuracy + "%)", null);
+        addStatRow(2, "Current Streak", p.streakDays() + " days",
+                   Icons.of(Icons.FLAME, 16, "#FF9F1C"));
+        addStatRow(3, "Last Review",    lastReview, null);
     }
 
-    private void addStatRow(int row, String key, String value) {
+    private void addStatRow(int row, String key, String value, Region icon) {
         Label keyLabel = new Label(key);
-        keyLabel.setStyle("-fx-text-fill: #7f8c8d; -fx-font-size: 13; -fx-min-width: 140;");
+        keyLabel.setStyle("-fx-text-fill: #6B6B7B; -fx-font-size: 13; -fx-min-width: 140;");
 
         Label valueLabel = new Label(value);
-        valueLabel.setStyle("-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+        valueLabel.setStyle("-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #1A1A2E;");
 
-        statsGrid.add(keyLabel,   0, row);
-        statsGrid.add(valueLabel, 1, row);
+        statsGrid.add(keyLabel, 0, row);
+        if (icon == null) {
+            statsGrid.add(valueLabel, 1, row);
+        } else {
+            HBox valueBox = new HBox(6, valueLabel, icon);
+            valueBox.setAlignment(Pos.CENTER_LEFT);
+            statsGrid.add(valueBox, 1, row);
+        }
     }
 
     private void populateBadges(ProgressResponse p) {
@@ -137,39 +147,62 @@ public class ProgressController {
         badgePane.getChildren().clear();
 
         String[][] allBadges = {
-            {"FIRST_REVIEW", "⭐",  "First Review"},
-            {"STREAK_3",     "🔥",  "3-Day Streak"},
-            {"STREAK_7",     "🔥🔥", "7-Day Streak"},
-            {"STREAK_30",    "💎",  "30-Day Streak"},
-            {"REVIEWS_100",  "💯",  "Century"},
-            {"REVIEWS_500",  "🏆",  "Five Hundred"},
-            {"LEVEL_5",      "🥈",  "Level 5"},
-            {"LEVEL_10",     "🥇",  "Level 10"},
+            {"FIRST_REVIEW", "First Review"},
+            {"STREAK_3",     "3-Day Streak"},
+            {"STREAK_7",     "7-Day Streak"},
+            {"STREAK_30",    "30-Day Streak"},
+            {"REVIEWS_100",  "Century"},
+            {"REVIEWS_500",  "Five Hundred"},
+            {"LEVEL_5",      "Level 5"},
+            {"LEVEL_10",     "Level 10"},
         };
 
         for (String[] badge : allBadges) {
             boolean earned = p.earnedBadges().contains(badge[0]);
-            badgePane.getChildren().add(buildBadgeBox(badge[1], badge[2], earned));
+            badgePane.getChildren().add(buildBadgeBox(badge[0], badge[1], earned));
         }
     }
 
-    private VBox buildBadgeBox(String icon, String name, boolean earned) {
-        Label iconLabel = new Label(icon);
-        iconLabel.setStyle("-fx-font-size: 28;");
+    private VBox buildBadgeBox(String key, String name, boolean earned) {
+        Region icon = Icons.of(badgeIcon(key), 30, earned ? badgeColor(key) : "#A8A496");
 
         Label nameLabel = new Label(name);
-        nameLabel.setStyle("-fx-font-size: 11; -fx-text-fill: " + (earned ? "#2c3e50" : "#bdc3c7") + ";");
+        nameLabel.getStyleClass().add(earned ? "badge-name" : "badge-name-locked");
 
-        VBox box = new VBox(4, iconLabel, nameLabel);
+        VBox box = new VBox(8, icon, nameLabel);
         box.setAlignment(Pos.CENTER);
-        box.setStyle("-fx-background-color: " + (earned ? "white" : "#f5f6fa") + ";" +
-                     "-fx-background-radius: 8; -fx-padding: 10;" +
-                     "-fx-border-color: " + (earned ? "#3498db" : "#e0e0e0") + ";" +
-                     "-fx-border-radius: 8; -fx-min-width: 72;");
+        box.getStyleClass().add(earned ? "badge-tile" : "badge-tile-locked");
         if (!earned) {
-            box.setOpacity(0.4);
+            box.setOpacity(0.6);
         }
         return box;
+    }
+
+    private String badgeIcon(String key) {
+        return switch (key) {
+            case "FIRST_REVIEW"         -> Icons.STAR;
+            case "STREAK_3", "STREAK_7" -> Icons.FLAME;
+            case "STREAK_30"            -> Icons.DIAMOND;
+            case "REVIEWS_100"          -> Icons.CHECK_CIRCLE;
+            case "REVIEWS_500"          -> Icons.TROPHY;
+            case "LEVEL_5"              -> Icons.SHIELD;
+            case "LEVEL_10"             -> Icons.CROWN;
+            default                     -> Icons.STAR;
+        };
+    }
+
+    private String badgeColor(String key) {
+        return switch (key) {
+            case "FIRST_REVIEW" -> "#FFC93C";
+            case "STREAK_3"     -> "#FF6B6B";
+            case "STREAK_7"     -> "#FF9F1C";
+            case "STREAK_30"    -> "#4ECDC4";
+            case "REVIEWS_100"  -> "#6BCB77";
+            case "REVIEWS_500"  -> "#FFC93C";
+            case "LEVEL_5"      -> "#4ECDC4";
+            case "LEVEL_10"     -> "#FF9F1C";
+            default             -> "#FFC93C";
+        };
     }
 
     private void populateLeaderboard(List<LeaderboardEntry> entries) {
@@ -193,7 +226,7 @@ public class ProgressController {
             protected void updateItem(LeaderboardEntry entry, boolean empty) {
                 super.updateItem(entry, empty);
                 if (!empty && entry != null && entry.userId().equals(currentUserId)) {
-                    setStyle("-fx-background-color: #d6eaf8;");
+                    setStyle("-fx-background-color: #FFE9A8;");
                 } else {
                     setStyle("");
                 }

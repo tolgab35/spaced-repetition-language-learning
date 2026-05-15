@@ -6,29 +6,61 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.SVGPath?>
 
-<VBox xmlns="http://javafx.com/javafx/21"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.srll.javafx.controller.RegisterController"
-      alignment="CENTER" spacing="16" style="-fx-padding: 40;">
+<StackPane xmlns="http://javafx.com/javafx/21"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.srll.javafx.controller.RegisterController"
+           styleClass="auth-bg">
 
-    <Label text="SRLL" style="-fx-font-size: 32; -fx-font-weight: bold;" />
-    <Label text="Create Account" style="-fx-font-size: 16; -fx-text-fill: #7f8c8d;" />
+    <VBox alignment="CENTER" spacing="9" maxWidth="370"
+          styleClass="auth-card"
+          style="-fx-padding: 40 44;">
 
-    <TextField fx:id="usernameField" promptText="Username" maxWidth="300" prefWidth="300" />
-    <TextField fx:id="emailField"    promptText="Email"    maxWidth="300" prefWidth="300" />
-    <PasswordField fx:id="passwordField" promptText="Password (6+ characters)"
-                  maxWidth="300" prefWidth="300" />
+        <StackPane styleClass="logo-tile"
+                   minWidth="68" minHeight="68" maxWidth="68" maxHeight="68">
+            <Region styleClass="logo-icon"
+                    minWidth="38" minHeight="38" maxWidth="38" maxHeight="38">
+                <shape>
+                    <SVGPath content="M11.99 18.54l-7.37-5.73L3 14.07l9 7 9-7-1.63-1.27-7.38 5.74zM12 16l7.36-5.73L21 9l-9-7-9 7 1.63 1.27L12 16z" />
+                </shape>
+            </Region>
+        </StackPane>
+        <Label text="Create Account" styleClass="auth-title" />
+        <Label text="Start your language learning journey"
+               styleClass="auth-subtitle" />
 
-    <Button fx:id="registerButton" text="Create Account" defaultButton="true"
-            maxWidth="300" prefWidth="300" onAction="#handleRegister" />
+        <Region prefHeight="14" />
 
-    <ProgressIndicator fx:id="loadingIndicator" visible="false" maxWidth="32" maxHeight="32" />
+        <Label text="USERNAME" styleClass="field-label" maxWidth="Infinity" />
+        <TextField fx:id="usernameField" promptText="Choose a username"
+                   maxWidth="Infinity" />
 
-    <Label fx:id="errorLabel" text="" wrapText="true" maxWidth="300"
-           style="-fx-text-fill: #e74c3c;" visible="false" />
+        <Label text="EMAIL" styleClass="field-label" maxWidth="Infinity" />
+        <TextField fx:id="emailField" promptText="Your email address"
+                   maxWidth="Infinity" />
 
-    <Hyperlink text="Already have an account? Log In" onAction="#handleLoginLink" />
+        <Label text="PASSWORD" styleClass="field-label" maxWidth="Infinity" />
+        <PasswordField fx:id="passwordField" promptText="At least 6 characters"
+                       maxWidth="Infinity" />
 
-</VBox>
+        <Region prefHeight="4" />
+
+        <Button fx:id="registerButton" text="Create Account  →" defaultButton="true"
+                maxWidth="Infinity" onAction="#handleRegister"
+                styleClass="btn-primary" />
+
+        <ProgressIndicator fx:id="loadingIndicator" visible="false"
+                           maxWidth="32" maxHeight="32" />
+
+        <Label fx:id="errorLabel" text="" wrapText="true" maxWidth="Infinity"
+               styleClass="error-label" visible="false" />
+
+        <Hyperlink text="Already have an account? Sign In" onAction="#handleLoginLink"
+                   styleClass="link" />
+    </VBox>
+
+</StackPane>

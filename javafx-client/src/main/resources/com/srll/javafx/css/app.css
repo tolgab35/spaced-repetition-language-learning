@@ -1,69 +1,475 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   SRLL — Neo-Retro Theme
+   Cream canvas · ink outlines · hard offset shadows · pop colours
+   Palette: cream #FFF8E7 · ink #1A1A2E · yellow #FFC93C
+            teal #4ECDC4 · coral #FF6B6B · orange #FF9F1C · green #6BCB77
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── Root ─────────────────────────────────────────────────────────────── */
 .root {
-    -fx-font-family: "Segoe UI", "Arial", sans-serif;
-    -fx-base: #f5f6fa;
-    -fx-accent: #3498db;
+    -fx-font-family: "Segoe UI", "Helvetica Neue", "Arial", sans-serif;
+    -fx-base: #FFF8E7;
+    -fx-accent: #FF6B6B;
+    -fx-background: #FFF8E7;
+    -fx-focus-color: #1A1A2E;
+    -fx-faint-focus-color: transparent;
+}
+.content-bg {
+    -fx-background-color: #FFF8E7;
 }
 
-/* ── Card pane (review screen front/back faces) ─────────────────────── */
-.card-pane {
+/* ── Auth screens (login / register) ──────────────────────────────────── */
+.auth-bg {
+    -fx-background-color: #4ECDC4;
+}
+.auth-card {
     -fx-background-color: white;
-    -fx-background-radius: 12;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 12, 0, 0, 4);
-    -fx-min-width: 480;
-    -fx-min-height: 280;
+    -fx-background-radius: 10;
+    -fx-border-color: #1A1A2E;
+    -fx-border-width: 3;
+    -fx-border-radius: 10;
+    -fx-effect: dropshadow(gaussian, #1A1A2E, 0, 1.0, 10, 10);
+}
+.logo-tile {
+    -fx-background-color: #FFC93C;
+    -fx-background-radius: 14;
+    -fx-border-color: #1A1A2E;
+    -fx-border-width: 3;
+    -fx-border-radius: 14;
+}
+.logo-icon {
+    -fx-background-color: #1A1A2E;
+}
+.auth-title {
+    -fx-font-size: 30;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1A1A2E;
+}
+.auth-subtitle {
+    -fx-font-size: 13;
+    -fx-text-fill: #6B6B7B;
+}
+.field-label {
+    -fx-font-size: 11;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1A1A2E;
 }
 
-/* ── Rating buttons ──────────────────────────────────────────────────── */
-.btn-again {
-    -fx-background-color: #e74c3c;
-    -fx-text-fill: white;
-    -fx-font-size: 13;
+/* ── Text fields (global) ─────────────────────────────────────────────── */
+.text-field, .password-field {
+    -fx-background-color: #FFFDF5;
+    -fx-border-color: #1A1A2E;
+    -fx-border-width: 2.5;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 10 14;
+    -fx-font-size: 14;
+    -fx-pref-height: 44;
+    -fx-text-fill: #1A1A2E;
+    -fx-prompt-text-fill: #A8A496;
+}
+.text-field:focused, .password-field:focused {
+    -fx-border-color: #FF6B6B;
+    -fx-background-color: white;
+}
+
+/* ── Icon nodes inside buttons ────────────────────────────────────────── */
+.btn-icon {
+    -fx-background-color: #1A1A2E;
+}
+
+/* ── Primary button ───────────────────────────────────────────────────── */
+.btn-primary {
+    -fx-background-color: #FFC93C;
+    -fx-text-fill: #1A1A2E;
+    -fx-font-size: 14;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-border-color: #1A1A2E;
+    -fx-border-width: 2.5;
+    -fx-border-radius: 8;
+    -fx-pref-height: 46;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, #1A1A2E, 0, 1.0, 4, 4);
+}
+.btn-primary:hover {
+    -fx-background-color: #FFD45F;
+}
+.btn-primary:pressed {
+    -fx-translate-x: 4;
+    -fx-translate-y: 4;
+    -fx-effect: null;
+}
+
+/* ── App header bar ───────────────────────────────────────────────────── */
+.app-header {
+    -fx-background-color: #FFC93C;
+    -fx-border-color: #1A1A2E;
+    -fx-border-width: 0 0 3 0;
+    -fx-padding: 14 20;
+}
+.header-title {
+    -fx-font-size: 18;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1A1A2E;
+}
+.header-progress-label {
+    -fx-text-fill: #1A1A2E;
+    -fx-font-size: 14;
     -fx-font-weight: bold;
 }
-.btn-again:hover  { -fx-background-color: #c0392b; }
-
-.btn-hard {
-    -fx-background-color: #e67e22;
-    -fx-text-fill: white;
-    -fx-font-size: 13;
+.header-btn-light {
+    -fx-background-color: white;
+    -fx-text-fill: #1A1A2E;
     -fx-font-weight: bold;
+    -fx-background-radius: 7;
+    -fx-border-color: #1A1A2E;
+    -fx-border-width: 2.5;
+    -fx-border-radius: 7;
+    -fx-cursor: hand;
+    -fx-padding: 6 13;
+    -fx-effect: dropshadow(gaussian, #1A1A2E, 0, 1.0, 3, 3);
 }
-.btn-hard:hover   { -fx-background-color: #ca6f1e; }
-
-.btn-good {
-    -fx-background-color: #3498db;
-    -fx-text-fill: white;
-    -fx-font-size: 13;
+.header-btn-light:hover {
+    -fx-background-color: #FFFDF5;
+}
+.header-btn-light:pressed {
+    -fx-translate-x: 3;
+    -fx-translate-y: 3;
+    -fx-effect: null;
+}
+.header-btn-danger {
+    -fx-background-color: #FF6B6B;
+    -fx-text-fill: #1A1A2E;
     -fx-font-weight: bold;
+    -fx-background-radius: 7;
+    -fx-border-color: #1A1A2E;
+    -fx-border-width: 2.5;
+    -fx-border-radius: 7;
+    -fx-cursor: hand;
+    -fx-padding: 6 13;
+    -fx-effect: dropshadow(gaussian, #1A1A2E, 0, 1.0, 3, 3);
 }
-.btn-good:hover   { -fx-background-color: #2980b9; }
-
-.btn-easy {
-    -fx-background-color: #2ecc71;
-    -fx-text-fill: white;
-    -fx-font-size: 13;
-    -fx-font-weight: bold;
+.header-btn-danger:hover {
+    -fx-background-color: #FF8585;
 }
-.btn-easy:hover   { -fx-background-color: #27ae60; }
+.header-btn-danger:pressed {
+    -fx-translate-x: 3;
+    -fx-translate-y: 3;
+    -fx-effect: null;
+}
 
-/* ── Deck cards (deck-list screen) ──────────────────────────────────── */
+/* ── Deck list ────────────────────────────────────────────────────────── */
+.deck-list-bg {
+    -fx-background-color: #FFF8E7;
+    -fx-padding: 24;
+}
 .deck-card {
     -fx-background-color: white;
-    -fx-background-radius: 8;
-    -fx-border-color: #e0e0e0;
-    -fx-border-radius: 8;
-    -fx-padding: 12;
+    -fx-background-radius: 10;
+    -fx-border-color: #1A1A2E;
+    -fx-border-width: 3;
+    -fx-border-radius: 10;
+    -fx-padding: 16 18;
+    -fx-effect: dropshadow(gaussian, #1A1A2E, 0, 1.0, 5, 5);
 }
 .deck-card:hover {
-    -fx-border-color: #3498db;
-    -fx-effect: dropshadow(gaussian, rgba(52, 152, 219, 0.2), 8, 0, 0, 2);
+    -fx-translate-x: -2;
+    -fx-translate-y: -2;
+    -fx-effect: dropshadow(gaussian, #1A1A2E, 0, 1.0, 7, 7);
+}
+.deck-name {
+    -fx-font-size: 15;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1A1A2E;
+}
+.deck-count {
+    -fx-text-fill: #6B6B7B;
+    -fx-font-size: 12;
+}
+/* coloured language tile (deck thumbnail) */
+.lang-tile {
+    -fx-min-width: 48;
+    -fx-min-height: 48;
+    -fx-pref-width: 48;
+    -fx-pref-height: 48;
+    -fx-background-radius: 10;
+    -fx-border-color: #1A1A2E;
+    -fx-border-width: 2.5;
+    -fx-border-radius: 10;
+    -fx-text-fill: white;
+    -fx-font-size: 16;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+}
+/* small outlined language pill */
+.deck-pill {
+    -fx-background-color: #FFF8E7;
+    -fx-text-fill: #1A1A2E;
+    -fx-font-size: 11;
+    -fx-font-weight: bold;
+    -fx-border-color: #1A1A2E;
+    -fx-border-width: 2;
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+    -fx-padding: 2 9;
 }
 
-/* ── Utility label styles ────────────────────────────────────────────── */
+/* ── Deck-card mini buttons ───────────────────────────────────────────── */
+.btn-mini, .btn-mini-alt, .btn-mini-danger {
+    -fx-font-size: 12;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1A1A2E;
+    -fx-background-radius: 7;
+    -fx-border-color: #1A1A2E;
+    -fx-border-width: 2;
+    -fx-border-radius: 7;
+    -fx-cursor: hand;
+}
+.btn-mini {
+    -fx-background-color: #4ECDC4;
+    -fx-padding: 6 14;
+}
+.btn-mini:hover {
+    -fx-background-color: #6AD7CF;
+}
+.btn-mini-alt {
+    -fx-background-color: white;
+    -fx-padding: 6 14;
+}
+.btn-mini-alt:hover {
+    -fx-background-color: #FFFDF5;
+}
+.btn-mini-danger {
+    -fx-background-color: #FF6B6B;
+    -fx-padding: 6 10;
+}
+.btn-mini-danger:hover {
+    -fx-background-color: #FF8585;
+}
+
+/* ── Review card faces ────────────────────────────────────────────────── */
+.review-bg {
+    -fx-background-color: #FFF8E7;
+}
+.card-front {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-border-color: #1A1A2E;
+    -fx-border-width: 3;
+    -fx-border-radius: 12;
+    -fx-effect: dropshadow(gaussian, #1A1A2E, 0, 1.0, 7, 7);
+}
+.card-back {
+    -fx-background-color: #DFF7F5;
+    -fx-background-radius: 12;
+    -fx-border-color: #1A1A2E;
+    -fx-border-width: 3;
+    -fx-border-radius: 12;
+    -fx-effect: dropshadow(gaussian, #1A1A2E, 0, 1.0, 7, 7);
+}
+.card-front-text {
+    -fx-font-size: 26;
+    -fx-text-fill: #1A1A2E;
+    -fx-text-alignment: center;
+    -fx-font-weight: bold;
+}
+.card-back-text {
+    -fx-font-size: 26;
+    -fx-text-fill: #1A1A2E;
+    -fx-text-alignment: center;
+    -fx-font-weight: bold;
+}
+
+/* ── Show Answer button ───────────────────────────────────────────────── */
+.btn-show-answer {
+    -fx-background-color: #4ECDC4;
+    -fx-text-fill: #1A1A2E;
+    -fx-font-size: 15;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-border-color: #1A1A2E;
+    -fx-border-width: 3;
+    -fx-border-radius: 8;
+    -fx-pref-height: 52;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, #1A1A2E, 0, 1.0, 4, 4);
+}
+.btn-show-answer:hover {
+    -fx-background-color: #6AD7CF;
+}
+.btn-show-answer:pressed {
+    -fx-translate-x: 4;
+    -fx-translate-y: 4;
+    -fx-effect: null;
+}
+.btn-show-answer:disabled {
+    -fx-opacity: 0.45;
+}
+
+/* ── Rating buttons ───────────────────────────────────────────────────── */
+.btn-again, .btn-hard, .btn-good, .btn-easy {
+    -fx-text-fill: #1A1A2E;
+    -fx-font-size: 14;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-border-color: #1A1A2E;
+    -fx-border-width: 2.5;
+    -fx-border-radius: 8;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, #1A1A2E, 0, 1.0, 4, 4);
+}
+.btn-again:pressed, .btn-hard:pressed, .btn-good:pressed, .btn-easy:pressed {
+    -fx-translate-x: 4;
+    -fx-translate-y: 4;
+    -fx-effect: null;
+}
+.btn-again  { -fx-background-color: #FF6B6B; }
+.btn-again:hover  { -fx-background-color: #FF8585; }
+.btn-hard   { -fx-background-color: #FF9F1C; }
+.btn-hard:hover   { -fx-background-color: #FFB347; }
+.btn-good   { -fx-background-color: #4ECDC4; }
+.btn-good:hover   { -fx-background-color: #6AD7CF; }
+.btn-easy   { -fx-background-color: #6BCB77; }
+.btn-easy:hover   { -fx-background-color: #85D88F; }
+
+/* ── Session progress bar (in header) ─────────────────────────────────── */
+.session-progress {
+    -fx-background-color: transparent;
+}
+.session-progress > .track {
+    -fx-background-color: rgba(26, 26, 46, 0.12);
+    -fx-background-radius: 6;
+    -fx-border-color: #1A1A2E;
+    -fx-border-width: 2;
+    -fx-border-radius: 6;
+}
+.session-progress > .bar {
+    -fx-background-color: #FF6B6B;
+    -fx-background-radius: 4;
+    -fx-background-insets: 2;
+}
+
+/* ── XP progress bar (progress screen) ────────────────────────────────── */
+.xp-bar > .track {
+    -fx-background-color: #FFF8E7;
+    -fx-background-radius: 6;
+    -fx-border-color: #1A1A2E;
+    -fx-border-width: 2.5;
+    -fx-border-radius: 6;
+}
+.xp-bar > .bar {
+    -fx-background-color: #FFC93C;
+    -fx-background-radius: 4;
+    -fx-background-insets: 2.5;
+}
+
+/* ── Panels (progress screen) ─────────────────────────────────────────── */
+.panel {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-border-color: #1A1A2E;
+    -fx-border-width: 3;
+    -fx-border-radius: 10;
+    -fx-padding: 22;
+    -fx-effect: dropshadow(gaussian, #1A1A2E, 0, 1.0, 5, 5);
+}
+.panel-title {
+    -fx-font-size: 16;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1A1A2E;
+}
+.level-label {
+    -fx-font-size: 28;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1A1A2E;
+}
+.xp-caption {
+    -fx-text-fill: #6B6B7B;
+    -fx-font-size: 12;
+}
+
+/* ── Badge tiles ──────────────────────────────────────────────────────── */
+.badge-tile {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-border-color: #1A1A2E;
+    -fx-border-width: 2.5;
+    -fx-border-radius: 10;
+    -fx-padding: 12 10;
+    -fx-min-width: 88;
+}
+.badge-tile-locked {
+    -fx-background-color: #F0EDE0;
+    -fx-background-radius: 10;
+    -fx-border-color: #C9C5B8;
+    -fx-border-width: 2.5;
+    -fx-border-radius: 10;
+    -fx-padding: 12 10;
+    -fx-min-width: 88;
+}
+.badge-name {
+    -fx-font-size: 11;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1A1A2E;
+}
+.badge-name-locked {
+    -fx-font-size: 11;
+    -fx-text-fill: #A8A496;
+}
+
+/* ── Tables ───────────────────────────────────────────────────────────── */
+.table-view {
+    -fx-background-color: white;
+    -fx-border-color: #1A1A2E;
+    -fx-border-width: 2.5;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 0;
+}
+.table-view .column-header-background {
+    -fx-background-color: #FFC93C;
+    -fx-background-radius: 5 5 0 0;
+}
+.table-view .column-header,
+.table-view .filler {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent #1A1A2E transparent transparent;
+    -fx-border-width: 0 1.5 0 0;
+}
+.table-view .column-header .label {
+    -fx-text-fill: #1A1A2E;
+    -fx-font-weight: bold;
+}
+.table-view .table-cell {
+    -fx-text-fill: #1A1A2E;
+    -fx-alignment: center-left;
+}
+.table-row-cell:selected {
+    -fx-background-color: #FFE9A8;
+}
+
+/* ── Scroll panes ─────────────────────────────────────────────────────── */
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+/* ── Utility ──────────────────────────────────────────────────────────── */
 .error-label {
-    -fx-text-fill: #e74c3c;
+    -fx-text-fill: #E03131;
+    -fx-font-size: 13;
+    -fx-font-weight: bold;
 }
 .secondary-label {
-    -fx-text-fill: #7f8c8d;
+    -fx-text-fill: #6B6B7B;
     -fx-font-size: 12;
+}
+.link {
+    -fx-text-fill: #FF6B6B;
+    -fx-font-size: 13;
+    -fx-font-weight: bold;
+    -fx-border-color: transparent;
 }

@@ -7,35 +7,34 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
 
 <BorderPane xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.srll.javafx.controller.CardListController">
 
     <top>
-        <HBox alignment="CENTER_LEFT" spacing="12"
-              style="-fx-padding: 16; -fx-background-color: #3498db;">
-            <Button text="← Back" onAction="#handleBack"
-                    style="-fx-background-color: white; -fx-text-fill: #3498db;" />
-            <Label fx:id="deckNameLabel" text=""
-                   style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: white;" />
+        <HBox alignment="CENTER_LEFT" spacing="12" styleClass="app-header">
+            <Button text="← Back" onAction="#handleBack" styleClass="header-btn-light" />
+            <Label fx:id="deckNameLabel" text="" styleClass="header-title" />
             <Region HBox.hgrow="ALWAYS" />
             <Button text="+ Add Card" onAction="#handleAddCard"
-                    style="-fx-background-color: white; -fx-text-fill: #3498db; -fx-font-weight: bold;" />
+                    styleClass="header-btn-light" style="-fx-font-weight: bold;" />
         </HBox>
     </top>
 
     <center>
-        <TableView fx:id="cardTable"
-                   style="-fx-padding: 16;">
-            <columns>
-                <TableColumn fx:id="frontColumn"      text="Front"       prefWidth="200" />
-                <TableColumn fx:id="backColumn"       text="Back"        prefWidth="200" />
-                <TableColumn fx:id="intervalColumn"   text="Interval"    prefWidth="100" />
-                <TableColumn fx:id="nextReviewColumn" text="Next Review" prefWidth="130" />
-                <TableColumn fx:id="actionsColumn"    text="Actions"     prefWidth="150" sortable="false" />
-            </columns>
-        </TableView>
+        <VBox styleClass="content-bg" style="-fx-padding: 16;">
+            <TableView fx:id="cardTable" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="frontColumn"      text="Front"       prefWidth="200" />
+                    <TableColumn fx:id="backColumn"       text="Back"        prefWidth="200" />
+                    <TableColumn fx:id="intervalColumn"   text="Interval"    prefWidth="100" />
+                    <TableColumn fx:id="nextReviewColumn" text="Next Review" prefWidth="130" />
+                    <TableColumn fx:id="actionsColumn"    text="Actions"     prefWidth="150" sortable="false" />
+                </columns>
+            </TableView>
+        </VBox>
     </center>
 
 </BorderPane>

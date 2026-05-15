@@ -4,6 +4,7 @@ import com.srll.javafx.MainApp;
 import com.srll.javafx.http.ApiException;
 import com.srll.javafx.http.dto.CardResponse;
 import com.srll.javafx.service.CardApiService;
+import com.srll.javafx.ui.Icons;
 import javafx.animation.RotateTransition;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -15,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
@@ -23,6 +25,20 @@ import java.util.Collections;
 import java.util.List;
 
 public class ReviewController {
+
+    /** Neo-retro styling for the session-summary / empty-state overlay. */
+    private static final String SUMMARY_CARD =
+        "-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 40; "
+        + "-fx-border-color: #1A1A2E; -fx-border-width: 3; -fx-border-radius: 12; "
+        + "-fx-effect: dropshadow(gaussian, #1A1A2E, 0, 1.0, 7, 7);";
+    private static final String SUMMARY_BTN_BASE =
+        "-fx-text-fill: #1A1A2E; -fx-font-size: 14; -fx-font-weight: bold; -fx-cursor: hand; "
+        + "-fx-background-radius: 8; -fx-border-color: #1A1A2E; -fx-border-width: 2.5; "
+        + "-fx-border-radius: 8; -fx-padding: 10 22;";
+    private static final String SUMMARY_BTN_TEAL =
+        SUMMARY_BTN_BASE + "-fx-background-color: #4ECDC4;";
+    private static final String SUMMARY_BTN_YELLOW =
+        SUMMARY_BTN_BASE + "-fx-background-color: #FFC93C;";
 
     @FXML private Label       progressLabel;
     @FXML private ProgressBar sessionProgress;
@@ -108,41 +124,40 @@ public class ReviewController {
 
     private void showSessionSummary() {
         sessionProgress.setProgress(1.0);
-        progressLabel.setText("Complete! ✓");
+        progressLabel.setText("Complete!");
 
         int accuracy      = reviewedCount == 0 ? 0
                 : (int) Math.round((double) correctCount / reviewedCount * 100);
         int estimatedXp   = correctCount * 10;
 
-        Label titleLabel = new Label("Session Complete! 🎉");
-        titleLabel.setStyle("-fx-font-size: 24; -fx-font-weight: bold;");
+        Region trophyIcon = Icons.of(Icons.TROPHY, 56, "#FFC93C");
+
+        Label titleLabel = new Label("Session Complete!");
+        titleLabel.setStyle("-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #1A1A2E;");
 
         Label reviewedLabel = new Label("Reviewed: " + reviewedCount + " cards");
-        reviewedLabel.setStyle("-fx-font-size: 16;");
+        reviewedLabel.setStyle("-fx-font-size: 16; -fx-text-fill: #1A1A2E;");
 
         Label correctLabel = new Label("Correct: " + correctCount + "  (" + accuracy + "%)");
-        correctLabel.setStyle("-fx-font-size: 16;");
+        correctLabel.setStyle("-fx-font-size: 16; -fx-text-fill: #1A1A2E;");
 
         Label xpLabel = new Label("XP earned: ~" + estimatedXp + " pts");
-        xpLabel.setStyle("-fx-font-size: 16; -fx-text-fill: #3498db; -fx-font-weight: bold;");
+        xpLabel.setStyle("-fx-font-size: 16; -fx-text-fill: #FF6B6B; -fx-font-weight: bold;");
 
         Button progressBtn = new Button("View Progress");
-        progressBtn.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; " +
-                             "-fx-font-size: 14; -fx-padding: 8 24;");
+        progressBtn.setStyle(SUMMARY_BTN_TEAL);
         progressBtn.setOnAction(e -> MainApp.navigate("progress.fxml"));
 
         Button decksBtn = new Button("Back to Decks");
-        decksBtn.setStyle("-fx-background-color: #2ecc71; -fx-text-fill: white; " +
-                          "-fx-font-size: 14; -fx-padding: 8 24;");
+        decksBtn.setStyle(SUMMARY_BTN_YELLOW);
         decksBtn.setOnAction(e -> MainApp.navigate("deck-list.fxml"));
 
         HBox btnRow = new HBox(16, progressBtn, decksBtn);
         btnRow.setAlignment(Pos.CENTER);
 
-        VBox summary = new VBox(16, titleLabel, reviewedLabel, correctLabel, xpLabel, btnRow);
+        VBox summary = new VBox(16, trophyIcon, titleLabel, reviewedLabel, correctLabel, xpLabel, btnRow);
         summary.setAlignment(Pos.CENTER);
-        summary.setStyle("-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 40; " +
-                         "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 12, 0, 0, 4);");
+        summary.setStyle(SUMMARY_CARD);
 
         cardContainer.getChildren().setAll(summary);
 
@@ -156,26 +171,23 @@ public class ReviewController {
         sessionProgress.setProgress(1.0);
         progressLabel.setText("All done!");
 
-        Label emojiLabel = new Label("🎉");
-        emojiLabel.setStyle("-fx-font-size: 48;");
+        Region doneIcon = Icons.of(Icons.CHECK_CIRCLE, 60, "#6BCB77");
 
         Label titleLabel = new Label("You're all caught up!");
-        titleLabel.setStyle("-fx-font-size: 22; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+        titleLabel.setStyle("-fx-font-size: 22; -fx-font-weight: bold; -fx-text-fill: #1A1A2E;");
 
         Label subLabel = new Label("No cards are due for review today.\nCome back later!");
-        subLabel.setStyle("-fx-font-size: 14; -fx-text-fill: #7f8c8d;");
+        subLabel.setStyle("-fx-font-size: 14; -fx-text-fill: #6B6B7B;");
         subLabel.setTextAlignment(TextAlignment.CENTER);
         subLabel.setWrapText(true);
 
         Button backBtn = new Button("Back to Decks");
-        backBtn.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; " +
-                         "-fx-font-size: 14; -fx-padding: 8 24;");
+        backBtn.setStyle(SUMMARY_BTN_YELLOW);
         backBtn.setOnAction(e -> MainApp.navigate("deck-list.fxml"));
 
-        VBox emptyBox = new VBox(16, emojiLabel, titleLabel, subLabel, backBtn);
+        VBox emptyBox = new VBox(16, doneIcon, titleLabel, subLabel, backBtn);
         emptyBox.setAlignment(Pos.CENTER);
-        emptyBox.setStyle("-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 40; " +
-                          "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 12, 0, 0, 4);");
+        emptyBox.setStyle(SUMMARY_CARD);
 
         cardContainer.getChildren().setAll(emptyBox);
 
